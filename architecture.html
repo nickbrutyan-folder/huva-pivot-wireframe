@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HuVa Pivot — Architecture</title>
-<meta name="description" content="How the HuVa Career Pivot Agent will be built. Tight one-page architecture doc for partner approval.">
+<meta name="description" content="Two architecture proposals for HuVa Pivot v1. Pick one or take the hybrid.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Armenian:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{--bg:#fafaf7;--ink:#0a0a0a;--muted:#6b6b6b;--line:#e8e6e1;--card:#fff;--accent:#e94560;--good:#10b981}
+  :root{--bg:#fafaf7;--ink:#0a0a0a;--muted:#6b6b6b;--line:#e8e6e1;--card:#fff;--accent:#e94560;--good:#10b981;--warn:#f59e0b}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter','Noto Sans Armenian',system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
   html[lang="hy"] body{font-family:'Noto Sans Armenian','Inter',system-ui,sans-serif}
@@ -28,29 +28,49 @@
   .wf-bar .back-link{text-decoration:none}
   .wf-bar .back-link:hover{background:#222;text-decoration:none}
 
-  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 96px}
+  .tab-bar{background:#fff;border-bottom:1px solid var(--line);padding:0 16px;position:sticky;top:38px;z-index:40;display:flex;gap:4px;overflow:auto}
+  .tab{background:transparent;border:0;padding:14px 16px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-family:inherit}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--ink);border-bottom-color:var(--accent)}
+  .tab .author{display:block;font-size:11px;color:var(--muted);font-weight:500;margin-top:2px}
+  .tab.active .author{color:var(--accent)}
+
+  .wrap{max-width:880px;margin:0 auto;padding:36px 24px 96px}
+  .panel{display:none}
+  .panel.active{display:block;animation:fadeIn .3s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
   .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:12px;color:var(--muted);font-weight:500}
   .eyebrow .dot{width:6px;height:6px;border-radius:99px;background:var(--accent)}
-  h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin:18px 0 12px}
-  h2{font-size:clamp(20px,2.6vw,28px);font-weight:700;margin:36px 0 8px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
+  h1{font-size:clamp(28px,4.5vw,44px);line-height:1.1;letter-spacing:-.02em;font-weight:800;margin:18px 0 12px}
+  h2{font-size:clamp(20px,2.4vw,26px);font-weight:700;margin:36px 0 8px;letter-spacing:-.01em;display:flex;align-items:baseline;gap:10px}
   h2 .num{color:var(--accent);font-weight:800}
   h3{font-size:16px;font-weight:700;margin:18px 0 6px}
   p{margin:0 0 14px;color:#222}
   .lead{font-size:18px;color:var(--muted);max-width:640px}
+
+  .note{background:#fffbeb;border:1px solid #fde68a;border-left:3px solid var(--warn);border-radius:10px;padding:14px 16px;margin:18px 0;font-size:14px}
+  .note strong{color:#92400e}
+  .note.green{background:#ecfdf5;border-color:#a7f3d0;border-left-color:var(--good)}
+  .note.green strong{color:#065f46}
+
   .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:14px 0}
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   @media (max-width:760px){.grid-2{grid-template-columns:1fr}}
   table{width:100%;border-collapse:collapse;margin:8px 0}
   th, td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:top}
   th{font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .pill-good{background:#ecfdf5;color:#065f46;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
-  .pill-warn{background:#fffbeb;color:#92400e;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600}
+  .pill-good{background:#ecfdf5;color:#065f46;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;display:inline-block}
+  .pill-warn{background:#fffbeb;color:#92400e;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;display:inline-block}
+  .pill-bad{background:#fef2f2;color:#991b1b;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;display:inline-block}
+
   .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0 8px}
   @media (max-width:760px){.flow{grid-template-columns:repeat(2,1fr)}}
   .flow .step{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;font-size:12px;line-height:1.4}
   .flow .step .n{display:inline-block;background:var(--accent);color:#fff;width:22px;height:22px;line-height:22px;border-radius:99px;font-weight:700;margin-bottom:6px;font-size:12px}
   .flow .step .lbl{font-weight:600;display:block;margin-bottom:2px}
   .flow .step .sub{color:var(--muted);font-size:11px}
+
   .approve{background:linear-gradient(135deg,#ecfdf5,#fff 60%);border:1px solid #10b98140;border-radius:14px;padding:20px;margin:24px 0}
   .approve h3{margin:0 0 8px;color:#065f46}
   .check{margin:0;padding:0;list-style:none}
@@ -58,6 +78,12 @@
   .check li::before{content:"✓";color:var(--good);font-weight:700;flex-shrink:0}
   ul.bullets{padding-left:20px;margin:8px 0}
   ul.bullets li{margin-bottom:6px}
+
+  .winner{display:inline-block;font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:.5px;text-transform:uppercase}
+  .winner.nick{background:#0a0a0a;color:#fff}
+  .winner.codex{background:#0e7490;color:#fff}
+  .winner.tie{background:#e8e6e1;color:#222}
+
   .footer-nav{margin-top:48px;padding-top:24px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
   .footer-nav a{margin-right:14px}
 </style>
@@ -65,7 +91,7 @@
 <body>
 
 <div class="wf-bar">
-  <div><span class="pill" data-i18n="bar.pill">Architecture</span> <span style="opacity:.7;margin-left:8px" data-i18n="bar.tagline">HuVa Pivot · v1 build doc</span></div>
+  <div><span class="pill" data-i18n="bar.pill">Architecture</span> <span style="opacity:.7;margin-left:8px" data-i18n="bar.tagline">HuVa Pivot · v1 build doc · two proposals + compare</span></div>
   <div class="ctrls">
     <a class="back-link" href="index.html" data-i18n="bar.back">← Wireframe</a>
     <button class="lang" data-lang="en" onclick="setLang('en')">EN</button>
@@ -73,393 +99,628 @@
   </div>
 </div>
 
+<nav class="tab-bar">
+  <button class="tab active" data-tab="nick" onclick="setTab('nick')">
+    <span data-i18n="tab.nick">Nick's plan</span>
+    <span class="author" data-i18n="tab.nick.sub">opinionated · 9 sections · richer</span>
+  </button>
+  <button class="tab" data-tab="codex" onclick="setTab('codex')">
+    <span data-i18n="tab.codex">Codex's plan</span>
+    <span class="author" data-i18n="tab.codex.sub">stripped · simplest viable · cheaper</span>
+  </button>
+  <button class="tab" data-tab="compare" onclick="setTab('compare')">
+    <span data-i18n="tab.compare">Compare + hybrid</span>
+    <span class="author" data-i18n="tab.compare.sub">side-by-side · my honest take · pick this</span>
+  </button>
+</nav>
+
+<!-- =========================================================== -->
+<!-- PANEL: NICK'S PLAN -->
+<!-- =========================================================== -->
+<div id="panel-nick" class="panel active">
 <div class="wrap">
 
-<span class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">Architecture · ready for approval</span></span>
-<h1 data-i18n="hero.title">How the Career Pivot Agent gets built</h1>
-<p class="lead" data-i18n="hero.lead">One page. No fluff. Read this end-to-end and you should know exactly what we're shipping, in what order, with what stack — and what we're explicitly NOT building in v1.</p>
+<span class="eyebrow"><span class="dot"></span><span data-i18n="nk.eyebrow">Architecture · Nick's recommendation</span></span>
+<h1 data-i18n="nk.title">How the Career Pivot Agent gets built</h1>
+<p class="lead" data-i18n="nk.lead">One page. No fluff. Read this end-to-end and you should know exactly what we're shipping, in what order, with what stack — and what we're explicitly NOT building in v1.</p>
 
-<h2><span class="num">1.</span> <span data-i18n="ov.title">What it is (and isn't)</span></h2>
+<div class="note">
+  <strong data-i18n="nk.note.t">What Codex would push back on:</strong>
+  <span data-i18n="nk.note.b"> "You don't need two Claude calls and you don't need to LLM-generate the diagnostic. Curated role-risk data is faster, deterministic, and citeable." See the <strong>Compare</strong> tab — Codex is right on both counts. The hybrid recommendation incorporates them.</span>
+</div>
+
+<h2><span class="num">1.</span> <span data-i18n="nk.s1.t">What it is (and isn't)</span></h2>
 <div class="card">
-<h3 data-i18n="ov.is">It is</h3>
+<h3 data-i18n="nk.s1.is">It is</h3>
 <ul class="bullets">
-<li data-i18n="ov.is.1">A single tool at <code>huva.io/pivot</code> that takes a job role + CV and returns a personalized AI-pivot plan.</li>
-<li data-i18n="ov.is.2">A self-contained Next.js app, deployed on Vercel, routed under huva.io via rewrite.</li>
-<li data-i18n="ov.is.3">Bilingual (EN + AM) from day one. Same code, two language packs.</li>
-<li data-i18n="ov.is.4">Anchored in real Anthropic Economic Index research — every diagnostic number cites a source.</li>
+<li data-i18n="nk.s1.is1">A single tool at <code>huva.io/pivot</code> that takes a job role + CV and returns a personalized AI-pivot plan.</li>
+<li data-i18n="nk.s1.is2">A self-contained Next.js app, deployed on Vercel, routed under huva.io via rewrite.</li>
+<li data-i18n="nk.s1.is3">Bilingual (EN + AM) from day one. Same code, two language packs.</li>
+<li data-i18n="nk.s1.is4">Anchored in real Anthropic Economic Index research — every diagnostic number cites a source.</li>
 </ul>
-<h3 data-i18n="ov.isnt">It is not (in v1)</h3>
+<h3 data-i18n="nk.s1.isnt">It is not (in v1)</h3>
 <ul class="bullets">
-<li data-i18n="ov.isnt.1">Not a multi-tenant SaaS. No accounts, no logins, no payments.</li>
-<li data-i18n="ov.isnt.2">Not integrated into the existing huva.io codebase. It's its own repo, mounted via routing.</li>
-<li data-i18n="ov.isnt.3">No save/share URLs in v1 — output lives in the browser tab. (Add in v1.5 if traffic justifies.)</li>
-<li data-i18n="ov.isnt.4">No CV upload reading on our backend — we send the PDF straight to Claude (native support).</li>
+<li data-i18n="nk.s1.isnt1">Not a multi-tenant SaaS. No accounts, no logins, no payments.</li>
+<li data-i18n="nk.s1.isnt2">Not integrated into the existing huva.io codebase. Its own repo, mounted via routing.</li>
+<li data-i18n="nk.s1.isnt3">No save/share URLs in v1 — output lives in the browser tab.</li>
+<li data-i18n="nk.s1.isnt4">No CV upload reading on our backend — PDF goes straight to Claude (native support).</li>
 </ul>
 </div>
 
-<h2><span class="num">2.</span> <span data-i18n="flow.title">User flow · 90 seconds end-to-end</span></h2>
+<h2><span class="num">2.</span> <span data-i18n="nk.s2.t">User flow · 90 seconds end-to-end</span></h2>
 <div class="flow">
-  <div class="step"><span class="n">1</span><span class="lbl" data-i18n="flow.s1.l">Land</span><span class="sub" data-i18n="flow.s1.s">huva.io/pivot</span></div>
-  <div class="step"><span class="n">2</span><span class="lbl" data-i18n="flow.s2.l">Role + Diagnostic</span><span class="sub" data-i18n="flow.s2.s">instant, no input beyond a title</span></div>
-  <div class="step"><span class="n">3</span><span class="lbl" data-i18n="flow.s3.l">CV upload</span><span class="sub" data-i18n="flow.s3.s">PDF or paste</span></div>
-  <div class="step"><span class="n">4</span><span class="lbl" data-i18n="flow.s4.l">Pivot plan</span><span class="sub" data-i18n="flow.s4.s">streams in, ~30s</span></div>
-  <div class="step"><span class="n">5</span><span class="lbl" data-i18n="flow.s5.l">Identity + share</span><span class="sub" data-i18n="flow.s5.s">PDF · LinkedIn · soft CTA</span></div>
+  <div class="step"><span class="n">1</span><span class="lbl" data-i18n="nk.s2.f1l">Land</span><span class="sub" data-i18n="nk.s2.f1s">huva.io/pivot</span></div>
+  <div class="step"><span class="n">2</span><span class="lbl" data-i18n="nk.s2.f2l">Role + Diagnostic</span><span class="sub" data-i18n="nk.s2.f2s">small Claude call · ~2s</span></div>
+  <div class="step"><span class="n">3</span><span class="lbl" data-i18n="nk.s2.f3l">CV upload</span><span class="sub" data-i18n="nk.s2.f3s">PDF or paste</span></div>
+  <div class="step"><span class="n">4</span><span class="lbl" data-i18n="nk.s2.f4l">Pivot plan</span><span class="sub" data-i18n="nk.s2.f4s">streams in, ~30s</span></div>
+  <div class="step"><span class="n">5</span><span class="lbl" data-i18n="nk.s2.f5l">Identity + share</span><span class="sub" data-i18n="nk.s2.f5s">PDF · LinkedIn · soft CTA</span></div>
 </div>
-<p style="font-size:13px;color:var(--muted)" data-i18n="flow.note">Steps 2 and 4 are both Claude API calls. Step 2 is fast (small prompt, role lookup). Step 4 is the heavy generation.</p>
 
-<h2><span class="num">3.</span> <span data-i18n="stack.title">Tech stack</span></h2>
+<h2><span class="num">3.</span> <span data-i18n="nk.s3.t">Tech stack</span></h2>
 <table>
-<thead><tr><th data-i18n="stack.col.layer">Layer</th><th data-i18n="stack.col.choice">Choice</th><th data-i18n="stack.col.why">Why</th></tr></thead>
+<thead><tr><th data-i18n="nk.s3.cl">Layer</th><th data-i18n="nk.s3.cc">Choice</th><th data-i18n="nk.s3.cw">Why</th></tr></thead>
 <tbody>
-<tr><td data-i18n="stack.r1.a">Frontend</td><td><code>Next.js 15</code> · Tailwind · shadcn/ui</td><td data-i18n="stack.r1.c">App Router, server components for SEO, client components for interactivity. shadcn matches HuVa's clean aesthetic.</td></tr>
-<tr><td data-i18n="stack.r2.a">i18n</td><td><code>next-intl</code></td><td data-i18n="stack.r2.c">Locale-prefixed routes (<code>/en/pivot</code>, <code>/hy/pivot</code>). Server-rendered, SEO-friendly.</td></tr>
-<tr><td data-i18n="stack.r3.a">API</td><td data-i18n="stack.r3.b">1 Vercel Edge Function</td><td data-i18n="stack.r3.c">Streams Claude response back via Server-Sent Events. Sub-100ms cold starts.</td></tr>
-<tr><td data-i18n="stack.r4.a">AI</td><td>Anthropic SDK · <code>claude-sonnet-4-6</code></td><td data-i18n="stack.r4.c">Native PDF support — no server-side parsing needed. Streaming output for the "watching it work" UX.</td></tr>
-<tr><td data-i18n="stack.r5.a">Abuse prevention</td><td>Cloudflare Turnstile</td><td data-i18n="stack.r5.c">Invisible CAPTCHA on the generate endpoint. No user friction. Free tier.</td></tr>
-<tr><td data-i18n="stack.r6.a">Storage</td><td data-i18n="stack.r6.b">None in v1</td><td data-i18n="stack.r6.c">Output lives in the browser tab. Add Supabase share-links in v1.5 only if traffic earns it.</td></tr>
-<tr><td data-i18n="stack.r7.a">PDF export</td><td data-i18n="stack.r7.b">Browser print CSS</td><td data-i18n="stack.r7.c">Zero server cost. User clicks "Download PDF" → triggers <code>window.print()</code>. We design a <code>@media print</code> stylesheet.</td></tr>
-<tr><td data-i18n="stack.r8.a">Hosting / routing</td><td>Vercel + huva.io rewrite</td><td data-i18n="stack.r8.c">App lives at <code>huva-pivot.vercel.app</code>. <code>huva.io/pivot/*</code> rewrites to it. SEO + branding stays under huva.io.</td></tr>
-<tr><td data-i18n="stack.r9.a">Analytics</td><td>Vercel Analytics + Plausible</td><td data-i18n="stack.r9.c">Privacy-friendly. Funnel events: land → diagnostic → CV → result → share.</td></tr>
+<tr><td data-i18n="nk.s3.r1a">Frontend</td><td><code>Next.js 15</code> · Tailwind · shadcn/ui</td><td data-i18n="nk.s3.r1c">App Router, server components for SEO. shadcn matches HuVa's clean aesthetic.</td></tr>
+<tr><td data-i18n="nk.s3.r2a">i18n</td><td><code>next-intl</code></td><td data-i18n="nk.s3.r2c">Locale-prefixed routes (<code>/en/pivot</code>, <code>/hy/pivot</code>). Server-rendered.</td></tr>
+<tr><td data-i18n="nk.s3.r3a">API</td><td data-i18n="nk.s3.r3b">2 Vercel Edge Functions</td><td data-i18n="nk.s3.r3c">Streams Claude responses via SSE. Sub-100ms cold starts.</td></tr>
+<tr><td data-i18n="nk.s3.r4a">AI</td><td>Anthropic SDK · <code>claude-sonnet-4-6</code></td><td data-i18n="nk.s3.r4c">Native PDF support. Streaming output.</td></tr>
+<tr><td data-i18n="nk.s3.r5a">Abuse prevention</td><td>Cloudflare Turnstile</td><td data-i18n="nk.s3.r5c">Invisible CAPTCHA on the generate endpoint. Free tier.</td></tr>
+<tr><td data-i18n="nk.s3.r6a">Storage</td><td data-i18n="nk.s3.r6b">None in v1</td><td data-i18n="nk.s3.r6c">Output lives in browser. Add Supabase share-links in v1.5 if traffic earns it.</td></tr>
+<tr><td data-i18n="nk.s3.r7a">PDF export</td><td data-i18n="nk.s3.r7b">Browser print CSS</td><td data-i18n="nk.s3.r7c">Zero server cost. <code>window.print()</code> + <code>@media print</code> stylesheet.</td></tr>
+<tr><td data-i18n="nk.s3.r8a">Hosting / routing</td><td>Vercel + huva.io rewrite</td><td data-i18n="nk.s3.r8c">App at <code>huva-pivot.vercel.app</code>. <code>huva.io/pivot/*</code> rewrites to it.</td></tr>
 </tbody>
 </table>
 
-<h2><span class="num">4.</span> <span data-i18n="data.title">Data flow</span></h2>
-<pre><code>┌──────────┐    role+lang    ┌──────────────┐
-│  User    │ ───────────────▶│  /api/diag   │   (small Claude call · returns exposure %, tasks)
-│ (browser)│ ◀───────────────│  edge fn     │
-└──────────┘    SSE stream   └──────────────┘
-     │
-     │  CV (PDF or text) + chosen pivot + lang
-     ▼
-┌──────────┐                 ┌──────────────┐
-│  User    │ ───────────────▶│  /api/plan   │   (full Claude call · master prompt)
-│          │ ◀───────────────│  edge fn     │   (streams JSON sections back)
-└──────────┘    SSE stream   └──────────────┘
-                                     │
-                                     ▼
-                              ┌──────────────┐
-                              │ Anthropic    │  Sonnet 4.6
-                              │ API          │  PDF input · streaming output
-                              └──────────────┘</code></pre>
-<p data-i18n="data.note">No PII stored. CV is sent to Anthropic's API and immediately discarded. We log only anonymous funnel events (role bucket, completion, no content).</p>
-
-<h2><span class="num">5.</span> <span data-i18n="prompt.title">Master prompt — what Claude returns</span></h2>
-<div class="card">
-<p data-i18n="prompt.intro">One Claude call (the heavy one in step 4) returns a single structured JSON object. Frontend renders it section by section as it streams in.</p>
-<pre><code>{
-  "diagnostic":   { "summary": str, "blurb": str, "exposure_pct": int,
-                    "augmented_pct": int, "automated_pct": int, "untouched_pct": int,
-                    "tasks": [ { label, tag, text } x4 ] },
-  "pivots":       [ { name, gap_pct, best?, why } x5 ],
-  "plan_30day":   [ { week, focus, daily_block } x4 ],
-  "plan_7day":    [ { day, action } x7 ],
-  "linkedin":     { "headline": str, "about": str },
-  "projects":     [ { name, huva_day, what_youll_build } x3 ],
-  "identity":     { name, new_role, risk }
-}</code></pre>
-<p data-i18n="prompt.lang">The system prompt enforces output language: if user picked AM, the entire JSON returns in Armenian. We do not translate post-hoc.</p>
-</div>
-
-<h2><span class="num">6.</span> <span data-i18n="files.title">File structure</span></h2>
-<pre><code>huva-pivot/
-├── app/
-│   ├── [locale]/
-│   │   ├── pivot/
-│   │   │   └── page.tsx          # landing + role input
-│   │   └── layout.tsx            # locale-aware layout, fonts
-│   └── api/
-│       ├── diag/route.ts         # small Claude call (step 2)
-│       └── plan/route.ts         # full master-prompt call (step 4)
-├── components/
-│   ├── PivotForm.tsx
-│   ├── DiagnosticCard.tsx
-│   ├── PivotList.tsx
-│   ├── WeeksGrid.tsx
-│   ├── LinkedinBlock.tsx
-│   ├── PortfolioBlock.tsx
-│   └── IdentityCard.tsx
-├── lib/
-│   ├── prompts.ts                # master + diagnostic prompts (EN + AM)
-│   ├── anthropic.ts              # SDK wrapper, streaming helper
-│   └── schema.ts                 # zod types for the JSON above
-├── messages/
-│   ├── en.json                   # all UI strings
-│   └── hy.json
-├── styles/
-│   ├── globals.css
-│   └── print.css                 # PDF export stylesheet
-└── README.md</code></pre>
-
-<h2><span class="num">7.</span> <span data-i18n="cost.title">Cost</span></h2>
+<h2><span class="num">4.</span> <span data-i18n="nk.s4.t">Cost</span></h2>
 <table>
-<thead><tr><th data-i18n="cost.col.item">Item</th><th data-i18n="cost.col.unit">Per use</th><th data-i18n="cost.col.month">/ month @ 1k uses</th></tr></thead>
+<thead><tr><th data-i18n="nk.s4.ci">Item</th><th data-i18n="nk.s4.cu">Per use</th><th data-i18n="nk.s4.cm">/ month @ 1k uses</th></tr></thead>
 <tbody>
-<tr><td data-i18n="cost.r1">Claude API (Sonnet 4.6, ~3k in / ~3k out)</td><td>~$0.03</td><td>~$30</td></tr>
-<tr><td data-i18n="cost.r2">Vercel hosting</td><td>—</td><td data-i18n="cost.r2.v">$0 (free tier covers this)</td></tr>
-<tr><td data-i18n="cost.r3">Cloudflare Turnstile</td><td>—</td><td>$0</td></tr>
-<tr><td data-i18n="cost.r4">Domain rewrite</td><td>—</td><td data-i18n="cost.r4.v">$0 (existing huva.io)</td></tr>
-<tr><td data-i18n="cost.tr"><strong>Total</strong></td><td>—</td><td><strong>~$30 / 1k generations</strong></td></tr>
+<tr><td data-i18n="nk.s4.r1">Claude API · Sonnet (2 calls)</td><td>~$0.04</td><td>~$40</td></tr>
+<tr><td data-i18n="nk.s4.r2">Vercel hosting</td><td>—</td><td data-i18n="nk.s4.r2v">$0 (free tier)</td></tr>
+<tr><td data-i18n="nk.s4.r3">Cloudflare Turnstile</td><td>—</td><td>$0</td></tr>
+<tr><td data-i18n="nk.s4.tr"><strong>Total</strong></td><td>—</td><td><strong>~$40 / 1k generations</strong></td></tr>
 </tbody>
 </table>
-<p style="font-size:13px;color:var(--muted)" data-i18n="cost.note">A pivot tool that costs $0.03 per qualified lead is, frankly, an absurd ROI compared to ad spend. The real cost is build time, not runtime.</p>
 
-<h2><span class="num">8.</span> <span data-i18n="phases.title">Build phases</span></h2>
+<h2><span class="num">5.</span> <span data-i18n="nk.s5.t">Build phases</span></h2>
 <div class="grid-2">
   <div class="card">
-    <span class="pill-good" data-i18n="phases.v1.tag">v1.0 · ship first</span>
-    <h3 data-i18n="phases.v1.title">Core experience · 6–8h</h3>
+    <span class="pill-good" data-i18n="nk.s5.v1tag">v1.0 · ship first</span>
+    <h3 data-i18n="nk.s5.v1">Core experience · 6–8h</h3>
     <ul class="bullets">
-      <li data-i18n="phases.v1.1">Single page, EN + AM, full flow (role → diagnostic → CV → output → identity card)</li>
-      <li data-i18n="phases.v1.2">PDF download via print CSS</li>
-      <li data-i18n="phases.v1.3">Cloudflare Turnstile</li>
-      <li data-i18n="phases.v1.4">Soft HuVa Academy CTA, single placement</li>
-      <li data-i18n="phases.v1.5">Vercel deploy, huva.io/pivot rewrite</li>
+      <li data-i18n="nk.s5.v1a">Single page, EN + AM, full flow (role → diagnostic → CV → output → identity card)</li>
+      <li data-i18n="nk.s5.v1b">PDF download via print CSS</li>
+      <li data-i18n="nk.s5.v1c">Cloudflare Turnstile</li>
+      <li data-i18n="nk.s5.v1d">Soft HuVa Academy CTA, single placement</li>
     </ul>
   </div>
   <div class="card">
-    <span class="pill-warn" data-i18n="phases.v15.tag">v1.5 · only if traffic earns it</span>
-    <h3 data-i18n="phases.v15.title">Share + persistence · +2h</h3>
+    <span class="pill-warn" data-i18n="nk.s5.v15tag">v1.5 · only if traffic earns it</span>
+    <h3 data-i18n="nk.s5.v15">Share + persistence · +2h</h3>
     <ul class="bullets">
-      <li data-i18n="phases.v15.1">Supabase row per generation, public share URLs (<code>/p/[id]</code>)</li>
-      <li data-i18n="phases.v15.2">OG image preview per result (auto-generated card)</li>
-      <li data-i18n="phases.v15.3">"Saved by 1,247 people" social proof when populated</li>
-    </ul>
-  </div>
-  <div class="card">
-    <span class="pill-warn" data-i18n="phases.v2.tag">v2.0 · later, if v1 validates</span>
-    <h3 data-i18n="phases.v2.title">Personalization deep cuts · +6h</h3>
-    <ul class="bullets">
-      <li data-i18n="phases.v2.1">More personas (15+ role archetypes pre-tuned)</li>
-      <li data-i18n="phases.v2.2">"Apply with this CV" — one-click ATS-friendly export</li>
-      <li data-i18n="phases.v2.3">Email follow-up sequence (Day 7, 15, 30 nudges)</li>
-      <li data-i18n="phases.v2.4">In-tool HuVa lesson previews on hover</li>
-    </ul>
-  </div>
-  <div class="card">
-    <span class="pill-warn" data-i18n="phases.v3.tag">future · maybe</span>
-    <h3 data-i18n="phases.v3.title">Adjacent tools</h3>
-    <ul class="bullets">
-      <li data-i18n="phases.v3.1">Same codebase hosts the Build Plan Generator (POC #2 from the plan)</li>
-      <li data-i18n="phases.v3.2">Shared <code>lib/anthropic.ts</code>, shared design system, shared i18n</li>
-      <li data-i18n="phases.v3.3">Compounding infra: each new tool ships in 4–6h, not 12–16h</li>
+      <li data-i18n="nk.s5.v15a">Supabase row per generation, public share URLs</li>
+      <li data-i18n="nk.s5.v15b">OG image preview per result</li>
     </ul>
   </div>
 </div>
 
-<h2><span class="num">9.</span> <span data-i18n="risks.title">Risks &amp; how we kill them</span></h2>
+<div class="approve">
+  <h3 data-i18n="nk.app.t">What "approved" means</h3>
+  <p data-i18n="nk.app.i">If you're happy with this doc, three checkboxes ship the work:</p>
+  <ul class="check">
+    <li data-i18n="nk.app.1">v1 scope is locked (everything in column 1 above; nothing more in v1)</li>
+    <li data-i18n="nk.app.2">Stack is approved (Next.js + Vercel + Anthropic + Cloudflare; no Supabase in v1)</li>
+    <li data-i18n="nk.app.3">Build budget is 6–8h focused work, target launch within 3 days</li>
+  </ul>
+</div>
+
+</div>
+</div>
+
+<!-- =========================================================== -->
+<!-- PANEL: CODEX'S PLAN -->
+<!-- =========================================================== -->
+<div id="panel-codex" class="panel">
+<div class="wrap">
+
+<span class="eyebrow"><span class="dot" style="background:#0e7490"></span><span data-i18n="cx.eyebrow">Architecture · Codex's recommendation</span></span>
+<h1 data-i18n="cx.title">Build the simplest version that preserves the wow</h1>
+<p class="lead" data-i18n="cx.lead">One page. One AI call. No database. No accounts. No saved results. Strip everything we don't need to keep ~85–90% of the user-perceived value.</p>
+
+<div class="note green">
+  <strong data-i18n="cx.note.t">Nick's reviewer's note:</strong>
+  <span data-i18n="cx.note.b"> Codex is right on the two big calls — local deterministic diagnostic and one Claude call. I disagree on dropping abuse prevention; for a public tool that costs money per use, that's an open door. The <strong>Compare</strong> tab has the resolved version that takes Codex's simplifications and keeps the one safety net.</span>
+</div>
+
+<h2><span class="num">1.</span> <span data-i18n="cx.s1.t">Goal</span></h2>
+<div class="card">
+  <p data-i18n="cx.s1.b">Build a simple, high-value AI career pivot tool for HuVa that shows users how exposed their current role is to AI, then gives them a personalized 30-day pivot plan based on their CV.</p>
+</div>
+
+<h2><span class="num">2.</span> <span data-i18n="cx.s2.t">Simplified architecture</span></h2>
+<pre><code>huva.io/pivot
+  ↓
+User enters role
+  ↓
+Instant local diagnostic     ← no API call · curated data · cited
+  ↓
+User pastes CV or uploads PDF
+  ↓
+One Claude API call          ← only call in the entire flow
+  ↓
+Structured pivot plan renders in browser
+  ↓
+User downloads PDF / clicks HuVa CTA</code></pre>
+<p data-i18n="cx.s2.b">The diagnostic is a static lookup. The personalized plan is the only LLM-generated piece. That's it.</p>
+
+<h2><span class="num">3.</span> <span data-i18n="cx.s3.t">What we keep</span></h2>
+<div class="card">
+<ul class="bullets">
+<li data-i18n="cx.s3.k1">Strong hook: <em>"Will Claude take your job?"</em></li>
+<li data-i18n="cx.s3.k2">Bilingual EN/HY experience</li>
+<li data-i18n="cx.s3.k3">Role-based AI exposure diagnostic</li>
+<li data-i18n="cx.s3.k4">CV-based personalization</li>
+<li data-i18n="cx.s3.k5">5 ranked pivot paths</li>
+<li data-i18n="cx.s3.k6">30-day practical plan</li>
+<li data-i18n="cx.s3.k7">LinkedIn positioning</li>
+<li data-i18n="cx.s3.k8">3 portfolio projects</li>
+<li data-i18n="cx.s3.k9">Identity card</li>
+<li data-i18n="cx.s3.k10">Browser PDF export</li>
+<li data-i18n="cx.s3.k11">One strong HuVa Academy CTA</li>
+</ul>
+</div>
+
+<h2><span class="num">4.</span> <span data-i18n="cx.s4.t">What we cut from v1</span></h2>
+<div class="card">
+<ul class="bullets">
+<li data-i18n="cx.s4.c1">No login</li>
+<li data-i18n="cx.s4.c2">No payments</li>
+<li data-i18n="cx.s4.c3">No dashboard</li>
+<li data-i18n="cx.s4.c4">No saved result pages</li>
+<li data-i18n="cx.s4.c5">No Supabase</li>
+<li data-i18n="cx.s4.c6">No personalized share links</li>
+<li data-i18n="cx.s4.c7">No second diagnostic API call</li>
+<li data-i18n="cx.s4.c8">No complex backend PDF generation</li>
+</ul>
+</div>
+
+<h2><span class="num">5.</span> <span data-i18n="cx.s5.t">Why this is better</span></h2>
+<div class="card">
+  <p data-i18n="cx.s5.b">Keeps ~85–90% of the user-perceived value while removing most of the technical complexity. Result:</p>
+  <ul class="bullets">
+    <li data-i18n="cx.s5.l1">Faster to build</li>
+    <li data-i18n="cx.s5.l2">Cheaper to run</li>
+    <li data-i18n="cx.s5.l3">Easier to QA in Armenian and English</li>
+    <li data-i18n="cx.s5.l4">Less fragile</li>
+    <li data-i18n="cx.s5.l5">Easier to launch as a campaign tool</li>
+    <li data-i18n="cx.s5.l6">Still powerful enough to convert users into HuVa Academy leads</li>
+  </ul>
+</div>
+
+<h2><span class="num">6.</span> <span data-i18n="cx.s6.t">Recommended v1 scope</span></h2>
+<div class="card">
+  <p data-i18n="cx.s6.b">Standalone Next.js app at <code>/pivot</code> with:</p>
+  <ul class="bullets">
+    <li data-i18n="cx.s6.l1">Local role-risk data for common roles</li>
+    <li data-i18n="cx.s6.l2">One <code>/api/plan</code> endpoint using Claude</li>
+    <li data-i18n="cx.s6.l3">Zod validation for structured output</li>
+    <li data-i18n="cx.s6.l4">EN/HY copy files</li>
+    <li data-i18n="cx.s6.l5">HuVa visual branding</li>
+    <li data-i18n="cx.s6.l6">Print CSS for "Download PDF"</li>
+    <li data-i18n="cx.s6.l7">Simple analytics: viewed diagnostic, submitted CV, generated result, clicked CTA</li>
+  </ul>
+</div>
+
+<h2><span class="num">7.</span> <span data-i18n="cx.s7.t">Ani review needed</span></h2>
+<div class="card">
+  <ul class="bullets">
+    <li data-i18n="cx.s7.l1">Armenian wording of the core promise</li>
+    <li data-i18n="cx.s7.l2">Whether the AI-risk framing feels motivating, not scary</li>
+    <li data-i18n="cx.s7.l3">Whether the HuVa CTA feels natural after the result</li>
+    <li data-i18n="cx.s7.l4">Whether the 30-day plan feels believable and useful</li>
+    <li data-i18n="cx.s7.l5">Whether the identity card is something people would actually share</li>
+  </ul>
+</div>
+
+<div class="approve">
+  <h3 data-i18n="cx.rec.t">Recommendation</h3>
+  <p data-i18n="cx.rec.b">Build this optimized v1 first, launch quickly, then add saved/shareable results only if people actually use it.</p>
+</div>
+
+</div>
+</div>
+
+<!-- =========================================================== -->
+<!-- PANEL: COMPARE + HYBRID -->
+<!-- =========================================================== -->
+<div id="panel-compare" class="panel">
+<div class="wrap">
+
+<span class="eyebrow"><span class="dot"></span><span data-i18n="cm.eyebrow">Side-by-side · my honest take · the hybrid pick</span></span>
+<h1 data-i18n="cm.title">Compare and decide</h1>
+<p class="lead" data-i18n="cm.lead">Each row names which call wins. Then a hybrid recommendation that takes the best of both.</p>
+
+<h2><span class="num">1.</span> <span data-i18n="cm.s1.t">Decision-by-decision</span></h2>
 <table>
-<thead><tr><th data-i18n="risks.col.r">Risk</th><th data-i18n="risks.col.k">Kill it with</th></tr></thead>
+<thead><tr><th data-i18n="cm.col.a">Aspect</th><th data-i18n="cm.col.n">Nick</th><th data-i18n="cm.col.c">Codex</th><th data-i18n="cm.col.w">Take</th></tr></thead>
 <tbody>
-<tr><td data-i18n="risks.r1.r">Anthropic output drifts off-brand</td><td data-i18n="risks.r1.k">Locked system prompt + golden-output evals run on every prompt change</td></tr>
-<tr><td data-i18n="risks.r2.r">PDF layout breaks on long content</td><td data-i18n="risks.r2.k">Print stylesheet tested with 3 personas; max-width and page-break-inside rules</td></tr>
-<tr><td data-i18n="risks.r3.r">Bots scraping the API</td><td data-i18n="risks.r3.k">Cloudflare Turnstile + per-IP rate limit on the edge function</td></tr>
-<tr><td data-i18n="risks.r4.r">Cost runs away if it goes viral</td><td data-i18n="risks.r4.k">Daily spend cap on Anthropic API key; auto-throttle to a queue if exceeded</td></tr>
-<tr><td data-i18n="risks.r5.r">Armenian translation feels stilted</td><td data-i18n="risks.r5.k">Native Armenian review (Ani) on the EN/AM lockup before launch</td></tr>
+<tr>
+  <td data-i18n="cm.r1.a">Diagnostic engine</td>
+  <td data-i18n="cm.r1.n">Small Claude call · LLM-generated</td>
+  <td data-i18n="cm.r1.c">Local curated data · deterministic</td>
+  <td><span class="winner codex" data-i18n="cm.w.codex">Codex</span> <span data-i18n="cm.r1.w">— faster, cheaper, citeable, more controllable</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r2.a">Number of Claude calls</td>
+  <td data-i18n="cm.r2.n">2 (diagnostic + plan)</td>
+  <td data-i18n="cm.r2.c">1 (plan only)</td>
+  <td><span class="winner codex" data-i18n="cm.w.codex">Codex</span> <span data-i18n="cm.r2.w">— fewer moving parts, cheaper, simpler error handling</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r3.a">Abuse prevention</td>
+  <td data-i18n="cm.r3.n">Cloudflare Turnstile (invisible)</td>
+  <td data-i18n="cm.r3.c">Not mentioned</td>
+  <td><span class="winner nick" data-i18n="cm.w.nick">Nick</span> <span data-i18n="cm.r3.w">— public tool with paid LLM = will be abused without it</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r4.a">Streaming output</td>
+  <td data-i18n="cm.r4.n">SSE explicit · "watching it work"</td>
+  <td data-i18n="cm.r4.c">Not specified</td>
+  <td><span class="winner nick" data-i18n="cm.w.nick">Nick</span> <span data-i18n="cm.r4.w">— better UX during the 20–30s wait, low extra cost</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r5.a">PDF export</td>
+  <td data-i18n="cm.r5.n">Print CSS</td>
+  <td data-i18n="cm.r5.c">Print CSS</td>
+  <td><span class="winner tie" data-i18n="cm.w.tie">Tie</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r6.a">Storage in v1</td>
+  <td data-i18n="cm.r6.n">None</td>
+  <td data-i18n="cm.r6.c">None</td>
+  <td><span class="winner tie" data-i18n="cm.w.tie">Tie</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r7.a">Bilingual EN + AM</td>
+  <td data-i18n="cm.r7.n">next-intl, locale routes</td>
+  <td data-i18n="cm.r7.c">EN/HY copy files</td>
+  <td><span class="winner tie" data-i18n="cm.w.tie">Tie</span> <span data-i18n="cm.r7.w">— same intent, naming difference</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r8.a">Validation of LLM output</td>
+  <td data-i18n="cm.r8.n">Implicit (TypeScript types)</td>
+  <td data-i18n="cm.r8.c">Zod schema validation</td>
+  <td><span class="winner codex" data-i18n="cm.w.codex">Codex</span> <span data-i18n="cm.r8.w">— Zod catches malformed Claude responses cleanly</span></td>
+</tr>
+<tr>
+  <td data-i18n="cm.r9.a">Build estimate</td>
+  <td data-i18n="cm.r9.n">6–8 hours</td>
+  <td data-i18n="cm.r9.c">Implied 4–6 hours</td>
+  <td><span class="winner codex" data-i18n="cm.w.codex">Codex</span> <span data-i18n="cm.r9.w">— cutting one Claude call + diagnostic logic = real time saved</span></td>
+</tr>
 </tbody>
 </table>
 
+<h2><span class="num">2.</span> <span data-i18n="cm.s2.t">The hybrid · what we should actually build</span></h2>
 <div class="approve">
-  <h3 data-i18n="approve.title">What "approved" means</h3>
-  <p data-i18n="approve.intro">If you're happy with this doc, three checkboxes ship the work:</p>
+  <h3 data-i18n="cm.hy.t">Recommended v1 (hybrid)</h3>
+  <p data-i18n="cm.hy.i">Take Codex's simplifications. Keep Nick's one safety net. Result is sharper than either alone.</p>
   <ul class="check">
-    <li data-i18n="approve.1">v1 scope is locked (everything in column 1 above; nothing more in v1)</li>
-    <li data-i18n="approve.2">Stack is approved (Next.js + Vercel + Anthropic + Cloudflare; no Supabase in v1)</li>
-    <li data-i18n="approve.3">Build budget is 6–8h focused work, target launch within 3 days</li>
+    <li data-i18n="cm.hy.1"><strong>Local deterministic diagnostic</strong> from curated role-risk data (Codex)</li>
+    <li data-i18n="cm.hy.2"><strong>One Claude call total</strong> for the personalized plan (Codex)</li>
+    <li data-i18n="cm.hy.3"><strong>Zod validation</strong> on the Claude response (Codex)</li>
+    <li data-i18n="cm.hy.4"><strong>Cloudflare Turnstile</strong> on the generate endpoint (Nick — non-negotiable)</li>
+    <li data-i18n="cm.hy.5"><strong>Streaming via SSE</strong> for the plan generation UX (Nick — keep if time allows; otherwise just await)</li>
+    <li data-i18n="cm.hy.6"><strong>Bilingual EN + AM</strong> via next-intl, locale-prefixed routes (both)</li>
+    <li data-i18n="cm.hy.7"><strong>Print CSS for PDF</strong>, no server-side renderer (both)</li>
+    <li data-i18n="cm.hy.8"><strong>Vercel + huva.io rewrite</strong>, no Supabase in v1 (both)</li>
   </ul>
-  <p style="margin-top:12px" data-i18n="approve.next">Once approved, we move to the implementation plan: a step-by-step build sheet with file-level tasks, in order.</p>
+  <p style="margin-top:14px" data-i18n="cm.hy.budget"><strong>Build budget</strong>: 5–7 hours focused. Target launch in 2–3 days.</p>
+  <p data-i18n="cm.hy.cost"><strong>Run cost</strong>: ~$30 / 1k generations (single Sonnet call, ~3k in / ~3k out).</p>
 </div>
 
-<div class="footer-nav">
-  <a href="index.html" data-i18n="nav.wireframe">← Back to wireframe</a>
-  <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues/new?template=feedback.yml&title=Architecture+feedback" target="_blank" rel="noopener" data-i18n="nav.feedback">Leave feedback on this doc →</a>
-  <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe" target="_blank" rel="noopener" data-i18n="nav.repo">Source on GitHub →</a>
+<h2><span class="num">3.</span> <span data-i18n="cm.s3.t">The role-risk data file (the new piece)</span></h2>
+<div class="card">
+<p data-i18n="cm.s3.b">This is the one new artifact the hybrid needs. A static JSON / TS file with curated diagnostics for ~25 common roles. Build this once, it powers every diagnostic instantly without any LLM cost.</p>
+<pre><code>// lib/role-risk.ts
+export const ROLE_RISK = {
+  "marketing-manager": {
+    exposure: 47,
+    aug: 38, auto: 47, safe: 15,
+    blurb: { en: "...", hy: "..." },
+    tasks: [
+      { tag: "auto", label: { en: "...", hy: "..." }, text: { en: "...", hy: "..." } },
+      // ...
+    ],
+    cite: "Anthropic Economic Index, Feb 2026"
+  },
+  "software-engineer": { ... },
+  "customer-service-rep": { ... },
+  // ~25 roles total for v1 launch
+}</code></pre>
+<p data-i18n="cm.s3.fb">Fallback for unknown roles: a generic "we don't have specific data for this role yet — here's the general augment-vs-automate framing" diagnostic that still feels personal.</p>
 </div>
 
+<h2><span class="num">4.</span> <span data-i18n="cm.s4.t">What approved means (hybrid)</span></h2>
+<div class="approve">
+  <h3 data-i18n="cm.s4.h">Three checkboxes to ship</h3>
+  <ul class="check">
+    <li data-i18n="cm.s4.1">Hybrid scope is locked (the 8 items above; nothing else in v1)</li>
+    <li data-i18n="cm.s4.2">~25 starter roles in <code>role-risk.ts</code> — agreed list before code starts</li>
+    <li data-i18n="cm.s4.3">Build budget 5–7h, ship in 2–3 days, then we look at v1.5 only if traffic justifies</li>
+  </ul>
+  <p style="margin-top:14px" data-i18n="cm.s4.next">Once approved, we move straight to the implementation plan: a step-by-step build sheet ordered for execution.</p>
+</div>
+
+</div>
+</div>
+
+<div class="wrap" style="padding:0 24px 60px;max-width:880px;margin:0 auto">
+  <div class="footer-nav">
+    <a href="index.html" data-i18n="nav.wireframe">← Back to wireframe</a>
+    <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues/new?template=feedback.yml&title=Architecture+feedback" target="_blank" rel="noopener" data-i18n="nav.feedback">Leave feedback on this doc →</a>
+    <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe" target="_blank" rel="noopener" data-i18n="nav.repo">Source on GitHub →</a>
+  </div>
 </div>
 
 <script>
 const T = {
   en: {
     "bar.pill":"Architecture",
-    "bar.tagline":"HuVa Pivot · v1 build doc",
+    "bar.tagline":"HuVa Pivot · v1 build doc · two proposals + compare",
     "bar.back":"← Wireframe",
-    "hero.eyebrow":"Architecture · ready for approval",
-    "hero.title":"How the Career Pivot Agent gets built",
-    "hero.lead":"One page. No fluff. Read this end-to-end and you should know exactly what we're shipping, in what order, with what stack — and what we're explicitly NOT building in v1.",
-    "ov.title":"What it is (and isn't)",
-    "ov.is":"It is",
-    "ov.is.1":"A single tool at huva.io/pivot that takes a job role + CV and returns a personalized AI-pivot plan.",
-    "ov.is.2":"A self-contained Next.js app, deployed on Vercel, routed under huva.io via rewrite.",
-    "ov.is.3":"Bilingual (EN + AM) from day one. Same code, two language packs.",
-    "ov.is.4":"Anchored in real Anthropic Economic Index research — every diagnostic number cites a source.",
-    "ov.isnt":"It is not (in v1)",
-    "ov.isnt.1":"Not a multi-tenant SaaS. No accounts, no logins, no payments.",
-    "ov.isnt.2":"Not integrated into the existing huva.io codebase. It's its own repo, mounted via routing.",
-    "ov.isnt.3":"No save/share URLs in v1 — output lives in the browser tab. (Add in v1.5 if traffic justifies.)",
-    "ov.isnt.4":"No CV upload reading on our backend — we send the PDF straight to Claude (native support).",
-    "flow.title":"User flow · 90 seconds end-to-end",
-    "flow.s1.l":"Land","flow.s1.s":"huva.io/pivot",
-    "flow.s2.l":"Role + Diagnostic","flow.s2.s":"instant, no input beyond a title",
-    "flow.s3.l":"CV upload","flow.s3.s":"PDF or paste",
-    "flow.s4.l":"Pivot plan","flow.s4.s":"streams in, ~30s",
-    "flow.s5.l":"Identity + share","flow.s5.s":"PDF · LinkedIn · soft CTA",
-    "flow.note":"Steps 2 and 4 are both Claude API calls. Step 2 is fast (small prompt, role lookup). Step 4 is the heavy generation.",
-    "stack.title":"Tech stack",
-    "stack.col.layer":"Layer","stack.col.choice":"Choice","stack.col.why":"Why",
-    "stack.r1.a":"Frontend","stack.r1.c":"App Router, server components for SEO, client components for interactivity. shadcn matches HuVa's clean aesthetic.",
-    "stack.r2.a":"i18n","stack.r2.c":"Locale-prefixed routes (/en/pivot, /hy/pivot). Server-rendered, SEO-friendly.",
-    "stack.r3.a":"API","stack.r3.b":"1 Vercel Edge Function","stack.r3.c":"Streams Claude response back via Server-Sent Events. Sub-100ms cold starts.",
-    "stack.r4.a":"AI","stack.r4.c":"Native PDF support — no server-side parsing needed. Streaming output for the \"watching it work\" UX.",
-    "stack.r5.a":"Abuse prevention","stack.r5.c":"Invisible CAPTCHA on the generate endpoint. No user friction. Free tier.",
-    "stack.r6.a":"Storage","stack.r6.b":"None in v1","stack.r6.c":"Output lives in the browser tab. Add Supabase share-links in v1.5 only if traffic earns it.",
-    "stack.r7.a":"PDF export","stack.r7.b":"Browser print CSS","stack.r7.c":"Zero server cost. User clicks \"Download PDF\" → triggers window.print(). We design a @media print stylesheet.",
-    "stack.r8.a":"Hosting / routing","stack.r8.c":"App lives at huva-pivot.vercel.app. huva.io/pivot/* rewrites to it. SEO + branding stays under huva.io.",
-    "stack.r9.a":"Analytics","stack.r9.c":"Privacy-friendly. Funnel events: land → diagnostic → CV → result → share.",
-    "data.title":"Data flow",
-    "data.note":"No PII stored. CV is sent to Anthropic's API and immediately discarded. We log only anonymous funnel events (role bucket, completion, no content).",
-    "prompt.title":"Master prompt — what Claude returns",
-    "prompt.intro":"One Claude call (the heavy one in step 4) returns a single structured JSON object. Frontend renders it section by section as it streams in.",
-    "prompt.lang":"The system prompt enforces output language: if user picked AM, the entire JSON returns in Armenian. We do not translate post-hoc.",
-    "files.title":"File structure",
-    "cost.title":"Cost",
-    "cost.col.item":"Item","cost.col.unit":"Per use","cost.col.month":"/ month @ 1k uses",
-    "cost.r1":"Claude API (Sonnet 4.6, ~3k in / ~3k out)",
-    "cost.r2":"Vercel hosting","cost.r2.v":"$0 (free tier covers this)",
-    "cost.r3":"Cloudflare Turnstile",
-    "cost.r4":"Domain rewrite","cost.r4.v":"$0 (existing huva.io)",
-    "cost.tr":"Total",
-    "cost.note":"A pivot tool that costs $0.03 per qualified lead is, frankly, an absurd ROI compared to ad spend. The real cost is build time, not runtime.",
-    "phases.title":"Build phases",
-    "phases.v1.tag":"v1.0 · ship first","phases.v1.title":"Core experience · 6–8h",
-    "phases.v1.1":"Single page, EN + AM, full flow (role → diagnostic → CV → output → identity card)",
-    "phases.v1.2":"PDF download via print CSS",
-    "phases.v1.3":"Cloudflare Turnstile",
-    "phases.v1.4":"Soft HuVa Academy CTA, single placement",
-    "phases.v1.5":"Vercel deploy, huva.io/pivot rewrite",
-    "phases.v15.tag":"v1.5 · only if traffic earns it","phases.v15.title":"Share + persistence · +2h",
-    "phases.v15.1":"Supabase row per generation, public share URLs (/p/[id])",
-    "phases.v15.2":"OG image preview per result (auto-generated card)",
-    "phases.v15.3":"\"Saved by 1,247 people\" social proof when populated",
-    "phases.v2.tag":"v2.0 · later, if v1 validates","phases.v2.title":"Personalization deep cuts · +6h",
-    "phases.v2.1":"More personas (15+ role archetypes pre-tuned)",
-    "phases.v2.2":"\"Apply with this CV\" — one-click ATS-friendly export",
-    "phases.v2.3":"Email follow-up sequence (Day 7, 15, 30 nudges)",
-    "phases.v2.4":"In-tool HuVa lesson previews on hover",
-    "phases.v3.tag":"future · maybe","phases.v3.title":"Adjacent tools",
-    "phases.v3.1":"Same codebase hosts the Build Plan Generator (POC #2 from the plan)",
-    "phases.v3.2":"Shared lib/anthropic.ts, shared design system, shared i18n",
-    "phases.v3.3":"Compounding infra: each new tool ships in 4–6h, not 12–16h",
-    "risks.title":"Risks & how we kill them",
-    "risks.col.r":"Risk","risks.col.k":"Kill it with",
-    "risks.r1.r":"Anthropic output drifts off-brand","risks.r1.k":"Locked system prompt + golden-output evals run on every prompt change",
-    "risks.r2.r":"PDF layout breaks on long content","risks.r2.k":"Print stylesheet tested with 3 personas; max-width and page-break-inside rules",
-    "risks.r3.r":"Bots scraping the API","risks.r3.k":"Cloudflare Turnstile + per-IP rate limit on the edge function",
-    "risks.r4.r":"Cost runs away if it goes viral","risks.r4.k":"Daily spend cap on Anthropic API key; auto-throttle to a queue if exceeded",
-    "risks.r5.r":"Armenian translation feels stilted","risks.r5.k":"Native Armenian review (Ani) on the EN/AM lockup before launch",
-    "approve.title":"What \"approved\" means",
-    "approve.intro":"If you're happy with this doc, three checkboxes ship the work:",
-    "approve.1":"v1 scope is locked (everything in column 1 above; nothing more in v1)",
-    "approve.2":"Stack is approved (Next.js + Vercel + Anthropic + Cloudflare; no Supabase in v1)",
-    "approve.3":"Build budget is 6–8h focused work, target launch within 3 days",
-    "approve.next":"Once approved, we move to the implementation plan: a step-by-step build sheet with file-level tasks, in order.",
+    "tab.nick":"Nick's plan","tab.nick.sub":"opinionated · 9 sections · richer",
+    "tab.codex":"Codex's plan","tab.codex.sub":"stripped · simplest viable · cheaper",
+    "tab.compare":"Compare + hybrid","tab.compare.sub":"side-by-side · my honest take · pick this",
+    "nk.eyebrow":"Architecture · Nick's recommendation",
+    "nk.title":"How the Career Pivot Agent gets built",
+    "nk.lead":"One page. No fluff. Read this end-to-end and you should know exactly what we're shipping, in what order, with what stack — and what we're explicitly NOT building in v1.",
+    "nk.note.t":"What Codex would push back on:",
+    "nk.note.b":" \"You don't need two Claude calls and you don't need to LLM-generate the diagnostic. Curated role-risk data is faster, deterministic, and citeable.\" See the <strong>Compare</strong> tab — Codex is right on both counts. The hybrid recommendation incorporates them.",
+    "nk.s1.t":"What it is (and isn't)",
+    "nk.s1.is":"It is",
+    "nk.s1.is1":"A single tool at <code>huva.io/pivot</code> that takes a job role + CV and returns a personalized AI-pivot plan.",
+    "nk.s1.is2":"A self-contained Next.js app, deployed on Vercel, routed under huva.io via rewrite.",
+    "nk.s1.is3":"Bilingual (EN + AM) from day one. Same code, two language packs.",
+    "nk.s1.is4":"Anchored in real Anthropic Economic Index research — every diagnostic number cites a source.",
+    "nk.s1.isnt":"It is not (in v1)",
+    "nk.s1.isnt1":"Not a multi-tenant SaaS. No accounts, no logins, no payments.",
+    "nk.s1.isnt2":"Not integrated into the existing huva.io codebase. Its own repo, mounted via routing.",
+    "nk.s1.isnt3":"No save/share URLs in v1 — output lives in the browser tab.",
+    "nk.s1.isnt4":"No CV upload reading on our backend — PDF goes straight to Claude (native support).",
+    "nk.s2.t":"User flow · 90 seconds end-to-end",
+    "nk.s2.f1l":"Land","nk.s2.f1s":"huva.io/pivot",
+    "nk.s2.f2l":"Role + Diagnostic","nk.s2.f2s":"small Claude call · ~2s",
+    "nk.s2.f3l":"CV upload","nk.s2.f3s":"PDF or paste",
+    "nk.s2.f4l":"Pivot plan","nk.s2.f4s":"streams in, ~30s",
+    "nk.s2.f5l":"Identity + share","nk.s2.f5s":"PDF · LinkedIn · soft CTA",
+    "nk.s3.t":"Tech stack",
+    "nk.s3.cl":"Layer","nk.s3.cc":"Choice","nk.s3.cw":"Why",
+    "nk.s3.r1a":"Frontend","nk.s3.r1c":"App Router, server components for SEO. shadcn matches HuVa's clean aesthetic.",
+    "nk.s3.r2a":"i18n","nk.s3.r2c":"Locale-prefixed routes (<code>/en/pivot</code>, <code>/hy/pivot</code>). Server-rendered.",
+    "nk.s3.r3a":"API","nk.s3.r3b":"2 Vercel Edge Functions","nk.s3.r3c":"Streams Claude responses via SSE. Sub-100ms cold starts.",
+    "nk.s3.r4a":"AI","nk.s3.r4c":"Native PDF support. Streaming output.",
+    "nk.s3.r5a":"Abuse prevention","nk.s3.r5c":"Invisible CAPTCHA on the generate endpoint. Free tier.",
+    "nk.s3.r6a":"Storage","nk.s3.r6b":"None in v1","nk.s3.r6c":"Output lives in browser. Add Supabase share-links in v1.5 if traffic earns it.",
+    "nk.s3.r7a":"PDF export","nk.s3.r7b":"Browser print CSS","nk.s3.r7c":"Zero server cost. <code>window.print()</code> + <code>@media print</code> stylesheet.",
+    "nk.s3.r8a":"Hosting / routing","nk.s3.r8c":"App at <code>huva-pivot.vercel.app</code>. <code>huva.io/pivot/*</code> rewrites to it.",
+    "nk.s4.t":"Cost",
+    "nk.s4.ci":"Item","nk.s4.cu":"Per use","nk.s4.cm":"/ month @ 1k uses",
+    "nk.s4.r1":"Claude API · Sonnet (2 calls)",
+    "nk.s4.r2":"Vercel hosting","nk.s4.r2v":"$0 (free tier)",
+    "nk.s4.r3":"Cloudflare Turnstile",
+    "nk.s4.tr":"Total",
+    "nk.s5.t":"Build phases",
+    "nk.s5.v1tag":"v1.0 · ship first","nk.s5.v1":"Core experience · 6–8h",
+    "nk.s5.v1a":"Single page, EN + AM, full flow (role → diagnostic → CV → output → identity card)",
+    "nk.s5.v1b":"PDF download via print CSS",
+    "nk.s5.v1c":"Cloudflare Turnstile",
+    "nk.s5.v1d":"Soft HuVa Academy CTA, single placement",
+    "nk.s5.v15tag":"v1.5 · only if traffic earns it","nk.s5.v15":"Share + persistence · +2h",
+    "nk.s5.v15a":"Supabase row per generation, public share URLs",
+    "nk.s5.v15b":"OG image preview per result",
+    "nk.app.t":"What \"approved\" means",
+    "nk.app.i":"If you're happy with this doc, three checkboxes ship the work:",
+    "nk.app.1":"v1 scope is locked (everything in column 1 above; nothing more in v1)",
+    "nk.app.2":"Stack is approved (Next.js + Vercel + Anthropic + Cloudflare; no Supabase in v1)",
+    "nk.app.3":"Build budget is 6–8h focused work, target launch within 3 days",
+
+    "cx.eyebrow":"Architecture · Codex's recommendation",
+    "cx.title":"Build the simplest version that preserves the wow",
+    "cx.lead":"One page. One AI call. No database. No accounts. No saved results. Strip everything we don't need to keep ~85–90% of the user-perceived value.",
+    "cx.note.t":"Nick's reviewer's note:",
+    "cx.note.b":" Codex is right on the two big calls — local deterministic diagnostic and one Claude call. I disagree on dropping abuse prevention; for a public tool that costs money per use, that's an open door. The <strong>Compare</strong> tab has the resolved version that takes Codex's simplifications and keeps the one safety net.",
+    "cx.s1.t":"Goal",
+    "cx.s1.b":"Build a simple, high-value AI career pivot tool for HuVa that shows users how exposed their current role is to AI, then gives them a personalized 30-day pivot plan based on their CV.",
+    "cx.s2.t":"Simplified architecture",
+    "cx.s2.b":"The diagnostic is a static lookup. The personalized plan is the only LLM-generated piece. That's it.",
+    "cx.s3.t":"What we keep",
+    "cx.s3.k1":"Strong hook: <em>\"Will Claude take your job?\"</em>","cx.s3.k2":"Bilingual EN/HY experience","cx.s3.k3":"Role-based AI exposure diagnostic","cx.s3.k4":"CV-based personalization","cx.s3.k5":"5 ranked pivot paths","cx.s3.k6":"30-day practical plan","cx.s3.k7":"LinkedIn positioning","cx.s3.k8":"3 portfolio projects","cx.s3.k9":"Identity card","cx.s3.k10":"Browser PDF export","cx.s3.k11":"One strong HuVa Academy CTA",
+    "cx.s4.t":"What we cut from v1",
+    "cx.s4.c1":"No login","cx.s4.c2":"No payments","cx.s4.c3":"No dashboard","cx.s4.c4":"No saved result pages","cx.s4.c5":"No Supabase","cx.s4.c6":"No personalized share links","cx.s4.c7":"No second diagnostic API call","cx.s4.c8":"No complex backend PDF generation",
+    "cx.s5.t":"Why this is better",
+    "cx.s5.b":"Keeps ~85–90% of the user-perceived value while removing most of the technical complexity. Result:",
+    "cx.s5.l1":"Faster to build","cx.s5.l2":"Cheaper to run","cx.s5.l3":"Easier to QA in Armenian and English","cx.s5.l4":"Less fragile","cx.s5.l5":"Easier to launch as a campaign tool","cx.s5.l6":"Still powerful enough to convert users into HuVa Academy leads",
+    "cx.s6.t":"Recommended v1 scope","cx.s6.b":"Standalone Next.js app at <code>/pivot</code> with:",
+    "cx.s6.l1":"Local role-risk data for common roles","cx.s6.l2":"One <code>/api/plan</code> endpoint using Claude","cx.s6.l3":"Zod validation for structured output","cx.s6.l4":"EN/HY copy files","cx.s6.l5":"HuVa visual branding","cx.s6.l6":"Print CSS for \"Download PDF\"","cx.s6.l7":"Simple analytics: viewed diagnostic, submitted CV, generated result, clicked CTA",
+    "cx.s7.t":"Ani review needed",
+    "cx.s7.l1":"Armenian wording of the core promise","cx.s7.l2":"Whether the AI-risk framing feels motivating, not scary","cx.s7.l3":"Whether the HuVa CTA feels natural after the result","cx.s7.l4":"Whether the 30-day plan feels believable and useful","cx.s7.l5":"Whether the identity card is something people would actually share",
+    "cx.rec.t":"Recommendation","cx.rec.b":"Build this optimized v1 first, launch quickly, then add saved/shareable results only if people actually use it.",
+
+    "cm.eyebrow":"Side-by-side · my honest take · the hybrid pick",
+    "cm.title":"Compare and decide",
+    "cm.lead":"Each row names which call wins. Then a hybrid recommendation that takes the best of both.",
+    "cm.s1.t":"Decision-by-decision",
+    "cm.col.a":"Aspect","cm.col.n":"Nick","cm.col.c":"Codex","cm.col.w":"Take",
+    "cm.w.nick":"Nick","cm.w.codex":"Codex","cm.w.tie":"Tie",
+    "cm.r1.a":"Diagnostic engine","cm.r1.n":"Small Claude call · LLM-generated","cm.r1.c":"Local curated data · deterministic","cm.r1.w":"— faster, cheaper, citeable, more controllable",
+    "cm.r2.a":"Number of Claude calls","cm.r2.n":"2 (diagnostic + plan)","cm.r2.c":"1 (plan only)","cm.r2.w":"— fewer moving parts, cheaper, simpler error handling",
+    "cm.r3.a":"Abuse prevention","cm.r3.n":"Cloudflare Turnstile (invisible)","cm.r3.c":"Not mentioned","cm.r3.w":"— public tool with paid LLM = will be abused without it",
+    "cm.r4.a":"Streaming output","cm.r4.n":"SSE explicit · \"watching it work\"","cm.r4.c":"Not specified","cm.r4.w":"— better UX during the 20–30s wait, low extra cost",
+    "cm.r5.a":"PDF export","cm.r5.n":"Print CSS","cm.r5.c":"Print CSS",
+    "cm.r6.a":"Storage in v1","cm.r6.n":"None","cm.r6.c":"None",
+    "cm.r7.a":"Bilingual EN + AM","cm.r7.n":"next-intl, locale routes","cm.r7.c":"EN/HY copy files","cm.r7.w":"— same intent, naming difference",
+    "cm.r8.a":"Validation of LLM output","cm.r8.n":"Implicit (TypeScript types)","cm.r8.c":"Zod schema validation","cm.r8.w":"— Zod catches malformed Claude responses cleanly",
+    "cm.r9.a":"Build estimate","cm.r9.n":"6–8 hours","cm.r9.c":"Implied 4–6 hours","cm.r9.w":"— cutting one Claude call + diagnostic logic = real time saved",
+    "cm.s2.t":"The hybrid · what we should actually build",
+    "cm.hy.t":"Recommended v1 (hybrid)",
+    "cm.hy.i":"Take Codex's simplifications. Keep Nick's one safety net. Result is sharper than either alone.",
+    "cm.hy.1":"<strong>Local deterministic diagnostic</strong> from curated role-risk data (Codex)",
+    "cm.hy.2":"<strong>One Claude call total</strong> for the personalized plan (Codex)",
+    "cm.hy.3":"<strong>Zod validation</strong> on the Claude response (Codex)",
+    "cm.hy.4":"<strong>Cloudflare Turnstile</strong> on the generate endpoint (Nick — non-negotiable)",
+    "cm.hy.5":"<strong>Streaming via SSE</strong> for the plan generation UX (Nick — keep if time allows; otherwise just await)",
+    "cm.hy.6":"<strong>Bilingual EN + AM</strong> via next-intl, locale-prefixed routes (both)",
+    "cm.hy.7":"<strong>Print CSS for PDF</strong>, no server-side renderer (both)",
+    "cm.hy.8":"<strong>Vercel + huva.io rewrite</strong>, no Supabase in v1 (both)",
+    "cm.hy.budget":"<strong>Build budget</strong>: 5–7 hours focused. Target launch in 2–3 days.",
+    "cm.hy.cost":"<strong>Run cost</strong>: ~$30 / 1k generations (single Sonnet call, ~3k in / ~3k out).",
+    "cm.s3.t":"The role-risk data file (the new piece)",
+    "cm.s3.b":"This is the one new artifact the hybrid needs. A static JSON / TS file with curated diagnostics for ~25 common roles. Build this once, it powers every diagnostic instantly without any LLM cost.",
+    "cm.s3.fb":"Fallback for unknown roles: a generic \"we don't have specific data for this role yet — here's the general augment-vs-automate framing\" diagnostic that still feels personal.",
+    "cm.s4.t":"What approved means (hybrid)",
+    "cm.s4.h":"Three checkboxes to ship",
+    "cm.s4.1":"Hybrid scope is locked (the 8 items above; nothing else in v1)",
+    "cm.s4.2":"~25 starter roles in <code>role-risk.ts</code> — agreed list before code starts",
+    "cm.s4.3":"Build budget 5–7h, ship in 2–3 days, then we look at v1.5 only if traffic justifies",
+    "cm.s4.next":"Once approved, we move straight to the implementation plan: a step-by-step build sheet ordered for execution.",
+
     "nav.wireframe":"← Back to wireframe",
     "nav.feedback":"Leave feedback on this doc →",
     "nav.repo":"Source on GitHub →"
   },
   hy: {
     "bar.pill":"Ճարտարապետություն",
-    "bar.tagline":"HuVa Pivot · v1 կառուցման փաստաթուղթ",
+    "bar.tagline":"HuVa Pivot · v1 կառուցման փաստաթուղթ · երկու առաջարկ + համեմատություն",
     "bar.back":"← Մակետ",
-    "hero.eyebrow":"Ճարտարապետություն · պատրաստ հաստատման",
-    "hero.title":"Ինչպես կկառուցվի Career Pivot Agent-ը",
-    "hero.lead":"Մեկ էջ: Առանց ավելորդի: Կարդա ամբողջը և կիմանաս՝ ինչ ենք ուղարկում, ինչ կարգով, ինչ stack-ով, և ինչ ենք բացահայտորեն ՉԵՆՔ կառուցում v1-ում:",
-    "ov.title":"Ինչ է (և ինչ չէ)",
-    "ov.is":"Ինչ է",
-    "ov.is.1":"Մեկ գործիք <code>huva.io/pivot</code>-ում, որը ստանում է աշխատանքի անվանումը + CV և վերադարձնում անհատականացված AI-պիվոտի պլան:",
-    "ov.is.2":"Ինքնուրույն Next.js հավելված, deployed Vercel-ում, ուղարկված huva.io-ից rewrite-ով:",
-    "ov.is.3":"Երկլեզու (EN + ՀԱՅ) առաջին օրվանից: Նույն կոդը, երկու լեզվային փաթեթ:",
-    "ov.is.4":"Հիմնված Anthropic Economic Index իսկական հետազոտության վրա — ամեն թիվ ունի աղբյուր:",
-    "ov.isnt":"Ինչ չէ (v1-ում)",
-    "ov.isnt.1":"Multi-tenant SaaS չէ: Հաշիվներ չկան, login չկա, վճարումներ չկան:",
-    "ov.isnt.2":"Չի ինտեգրված գոյություն ունեցող huva.io codebase-ի հետ: Իր սեփական repo-ն է, միացված routing-ով:",
-    "ov.isnt.3":"v1-ում save/share URL-ներ չկան — output-ը ապրում է browser tab-ում: (Կավելացնենք v1.5-ում, եթե տրաֆիկը արդարացնում է:)",
-    "ov.isnt.4":"CV upload-ի կարդացում մեր backend-ում չկա — PDF-ն ուղարկում ենք ուղիղ Claude-ին (native support):",
-    "flow.title":"Օգտատերի ուղին · 90 վայրկյան",
-    "flow.s1.l":"Մուտք","flow.s1.s":"huva.io/pivot",
-    "flow.s2.l":"Պաշտոն + Ախտորոշում","flow.s2.s":"անմիջապես, միայն անվանումով",
-    "flow.s3.l":"CV բեռնում","flow.s3.s":"PDF կամ տեքստ",
-    "flow.s4.l":"Պիվոտի պլան","flow.s4.s":"հոսում է, ~30 վրկ",
-    "flow.s5.l":"Ինքնություն + կիսում","flow.s5.s":"PDF · LinkedIn · մեղմ CTA",
-    "flow.note":"Քայլ 2 և 4-ը երկուսն էլ Claude API կանչեր են: 2-ը արագ է (փոքր prompt, role lookup): 4-ը ծանր generation-ն է:",
-    "stack.title":"Տեխնոլոգիական stack",
-    "stack.col.layer":"Շերտ","stack.col.choice":"Ընտրություն","stack.col.why":"Ինչու",
-    "stack.r1.a":"Frontend","stack.r1.c":"App Router, server components SEO-ի համար, client components ինտերակցիայի համար: shadcn-ը համապատասխանում է HuVa-ի մաքուր aesthetic-ին:",
-    "stack.r2.a":"i18n","stack.r2.c":"Locale-prefix-ով routes (<code>/en/pivot</code>, <code>/hy/pivot</code>): Server-rendered, SEO-friendly:",
-    "stack.r3.a":"API","stack.r3.b":"1 Vercel Edge Function","stack.r3.c":"Streams Claude-ի պատասխանը Server-Sent Events-ով: 100ms-ից քիչ cold start:",
-    "stack.r4.a":"AI","stack.r4.c":"Native PDF support — server-side parsing պետք չէ: Streaming output \"watching it work\" UX-ի համար:",
-    "stack.r5.a":"Abuse կանխարգելում","stack.r5.c":"Անտեսանելի CAPTCHA generate endpoint-ում: Օգտատերի համար շփում չկա: Free tier:",
-    "stack.r6.a":"Storage","stack.r6.b":"v1-ում չկա","stack.r6.c":"Output-ը ապրում է browser tab-ում: Supabase share-links կավելացնենք v1.5-ում միայն, եթե տրաֆիկը արդարացնի:",
-    "stack.r7.a":"PDF export","stack.r7.b":"Browser print CSS","stack.r7.c":"Server-ի ծախս զրո: Օգտատերը սեղմում է \"Download PDF\" → triggers <code>window.print()</code>: Մենք դիզայն ենք անում <code>@media print</code> stylesheet:",
-    "stack.r8.a":"Hosting / routing","stack.r8.c":"App-ը ապրում է <code>huva-pivot.vercel.app</code>-ում: <code>huva.io/pivot/*</code> rewrites է իրեն: SEO + branding-ը մնում է huva.io-ի տակ:",
-    "stack.r9.a":"Analytics","stack.r9.c":"Privacy-friendly: Funnel events՝ land → diagnostic → CV → result → share:",
-    "data.title":"Տվյալների հոսք",
-    "data.note":"PII չենք պահում: CV-ն ուղարկվում է Anthropic-ի API և անմիջապես հեռացվում: Մենք միայն գրանցում ենք անանուն funnel events (role bucket, completion, ոչ բովանդակություն):",
-    "prompt.title":"Master prompt — ինչ է վերադարձնում Claude-ը",
-    "prompt.intro":"Մեկ Claude call (ծանրը՝ քայլ 4-ում) վերադարձնում է մեկ կառուցվածքային JSON object: Frontend-ը render է անում section-ով section, երբ stream-ով գալիս է:",
-    "prompt.lang":"System prompt-ը պարտադրում է output լեզուն. եթե օգտատերը ընտրել է ՀԱՅ, ամբողջ JSON-ը գալիս է հայերեն: Հետո չենք թարգմանում:",
-    "files.title":"Ֆայլային կառուցվածք",
-    "cost.title":"Արժեք",
-    "cost.col.item":"Տարր","cost.col.unit":"Մեկ օգտագործում","cost.col.month":"/ ամսական @ 1k օգտագործում",
-    "cost.r1":"Claude API (Sonnet 4.6, ~3k in / ~3k out)",
-    "cost.r2":"Vercel hosting","cost.r2.v":"$0 (free tier-ը ծածկում է)",
-    "cost.r3":"Cloudflare Turnstile",
-    "cost.r4":"Domain rewrite","cost.r4.v":"$0 (գործող huva.io)",
-    "cost.tr":"Ընդհանուր",
-    "cost.note":"Pivot գործիք, որը արժե $0.03 մեկ qualified lead-ի համար, անհավատալի ROI է գովազդի ծախսերի համեմատ: Իսկական ծախսը կառուցման ժամանակն է, ոչ runtime-ը:",
-    "phases.title":"Կառուցման փուլեր",
-    "phases.v1.tag":"v1.0 · ուղարկել առաջինը","phases.v1.title":"Հիմնական փորձառություն · 6–8 ժ",
-    "phases.v1.1":"Մեկ էջ, EN + ՀԱՅ, ամբողջ ուղի (role → diagnostic → CV → output → identity card)",
-    "phases.v1.2":"PDF ներբեռնում print CSS-ով",
-    "phases.v1.3":"Cloudflare Turnstile",
-    "phases.v1.4":"Մեղմ HuVa Academy CTA, մեկ տեղ",
-    "phases.v1.5":"Vercel deploy, huva.io/pivot rewrite",
-    "phases.v15.tag":"v1.5 · միայն եթե տրաֆիկը արդարացնի","phases.v15.title":"Կիսում + persistence · +2 ժ",
-    "phases.v15.1":"Supabase row մեկ generation-ի համար, հանրային share URL-ներ (<code>/p/[id]</code>)",
-    "phases.v15.2":"OG image preview ամեն արդյունքի համար (ավտոմատ ստեղծվող card)",
-    "phases.v15.3":"\"Saved by 1,247 people\" social proof, երբ լրացված է",
-    "phases.v2.tag":"v2.0 · ավելի ուշ, եթե v1-ը հաստատվում է","phases.v2.title":"Անհատականացման խորքային աշխատանք · +6 ժ",
-    "phases.v2.1":"Ավելի շատ persona-ներ (15+ role archetype նախապես կարգավորված)",
-    "phases.v2.2":"\"Դիմել այս CV-ով\" — մեկ սեղմումով ATS-friendly export",
-    "phases.v2.3":"Email follow-up sequence (Օր 7, 15, 30 հիշեցումներ)",
-    "phases.v2.4":"Գործիքի մեջ HuVa դասերի preview hover-ով",
-    "phases.v3.tag":"ապագա · գուցե","phases.v3.title":"Հարակից գործիքներ",
-    "phases.v3.1":"Նույն codebase-ը կտեղակայի Build Plan Generator-ը (POC #2 պլանից)",
-    "phases.v3.2":"Համատեղ <code>lib/anthropic.ts</code>, համատեղ design system, համատեղ i18n",
-    "phases.v3.3":"Միացյալ infra. ամեն նոր գործիք կուղարկվի 4–6 ժ-ում, ոչ թե 12–16 ժ",
-    "risks.title":"Ռիսկեր և ինչպես ենք սպանում դրանք",
-    "risks.col.r":"Ռիսկ","risks.col.k":"Սպանել սրանով",
-    "risks.r1.r":"Anthropic output-ը շեղվում է բրենդից","risks.r1.k":"Կողպված system prompt + golden-output evaluations-ներ ամեն prompt փոփոխության",
-    "risks.r2.r":"PDF layout-ը կոտրվում է երկար բովանդակության դեպքում","risks.r2.k":"Print stylesheet-ը ստուգվել է 3 persona-ով; max-width և page-break-inside կանոններ",
-    "risks.r3.r":"Բոտերը scrape են անում API-ն","risks.r3.k":"Cloudflare Turnstile + per-IP rate limit edge function-ում",
-    "risks.r4.r":"Արժեքը դառնում է անկառավարելի, եթե viral գնա","risks.r4.k":"Օրական spend cap Anthropic API key-ի վրա; auto-throttle queue, եթե գերազանցի",
-    "risks.r5.r":"Հայերեն թարգմանությունը անբնական է","risks.r5.k":"Հայերենի native ստուգում (Ani) EN/ՀԱՅ պարունակության վրա մինչև launch",
-    "approve.title":"Ինչ նշանակում է \"հաստատված\"",
-    "approve.intro":"Եթե սա քեզ դուր է գալիս, երեք checkbox-ով աշխատանքը մեկնարկում է:",
-    "approve.1":"v1 scope-ը կողպված է (ամեն ինչ վերևի 1-ին սյունակում, ոչ ավելին v1-ում)",
-    "approve.2":"Stack-ը հաստատված է (Next.js + Vercel + Anthropic + Cloudflare; v1-ում Supabase չկա)",
-    "approve.3":"Կառուցման բյուջեն 6–8 ժ կենտրոնացված աշխատանք է, թիրախ՝ launch 3 օրում",
-    "approve.next":"Հաստատվելուց հետո մենք անցնում ենք implementation plan-ին. քայլ-առ-քայլ build sheet ֆայլային մակարդակի առաջադրանքներով, հերթականությամբ:",
+    "tab.nick":"Nick-ի պլան","tab.nick.sub":"կարծիքավոր · 9 բաժին · ավելի հարուստ",
+    "tab.codex":"Codex-ի պլան","tab.codex.sub":"կրճատված · ամենապարզ · ավելի էժան",
+    "tab.compare":"Համեմատություն + հիբրիդ","tab.compare.sub":"կողք-կողքի · իմ ազնիվ կարծիքը · ընտրիր սա",
+
+    "nk.eyebrow":"Ճարտարապետություն · Nick-ի առաջարկ",
+    "nk.title":"Ինչպես կկառուցվի Career Pivot Agent-ը",
+    "nk.lead":"Մեկ էջ: Առանց ավելորդի: Կարդա ամբողջը և կիմանաս՝ ինչ ենք ուղարկում, ինչ կարգով, ինչ stack-ով, և ինչ ենք բացահայտ ՉԵՆՔ կառուցում v1-ում:",
+    "nk.note.t":"Ինչի վրա Codex-ը կպնդի:",
+    "nk.note.b":" «Քեզ պետք չեն երկու Claude call և չպետք է diagnostic-ը LLM-ով գեներացնես: Կուրատացված role-risk տվյալներն ավելի արագ են, դետերմինիստիկ ու վկայելի»: Տես <strong>Համեմատություն</strong> tab-ը — Codex-ը ճիշտ է երկու կետերում: Հիբրիդ առաջարկը ներառում է դրանք:",
+    "nk.s1.t":"Ինչ է (և ինչ չէ)",
+    "nk.s1.is":"Ինչ է",
+    "nk.s1.is1":"Մեկ գործիք <code>huva.io/pivot</code>-ում, որը ստանում է աշխատանքի անվանումը + CV և վերադարձնում անհատականացված AI-պիվոտի պլան:",
+    "nk.s1.is2":"Ինքնուրույն Next.js հավելված, deployed Vercel-ում, ուղարկված huva.io-ից rewrite-ով:",
+    "nk.s1.is3":"Երկլեզու (EN + ՀԱՅ) առաջին օրվանից: Նույն կոդը, երկու լեզվային փաթեթ:",
+    "nk.s1.is4":"Հիմնված Anthropic Economic Index իսկական հետազոտության վրա — ամեն թիվ ունի աղբյուր:",
+    "nk.s1.isnt":"Ինչ չէ (v1-ում)",
+    "nk.s1.isnt1":"Multi-tenant SaaS չէ: Հաշիվներ չկան, login չկա, վճարումներ չկան:",
+    "nk.s1.isnt2":"Չի ինտեգրված գոյություն ունեցող huva.io codebase-ի հետ: Իր սեփական repo-ն է, միացված routing-ով:",
+    "nk.s1.isnt3":"v1-ում save/share URL-ներ չկան — output-ը ապրում է browser tab-ում:",
+    "nk.s1.isnt4":"CV upload-ի կարդացում մեր backend-ում չկա — PDF-ն ուղարկում ենք ուղիղ Claude-ին (native support):",
+    "nk.s2.t":"Օգտատերի ուղին · 90 վայրկյան",
+    "nk.s2.f1l":"Մուտք","nk.s2.f1s":"huva.io/pivot",
+    "nk.s2.f2l":"Պաշտոն + Ախտորոշում","nk.s2.f2s":"փոքր Claude call · ~2 վրկ",
+    "nk.s2.f3l":"CV բեռնում","nk.s2.f3s":"PDF կամ տեքստ",
+    "nk.s2.f4l":"Պիվոտի պլան","nk.s2.f4s":"հոսում է, ~30 վրկ",
+    "nk.s2.f5l":"Ինքնություն + կիսում","nk.s2.f5s":"PDF · LinkedIn · մեղմ CTA",
+    "nk.s3.t":"Տեխնոլոգիական stack",
+    "nk.s3.cl":"Շերտ","nk.s3.cc":"Ընտրություն","nk.s3.cw":"Ինչու",
+    "nk.s3.r1a":"Frontend","nk.s3.r1c":"App Router, server components SEO-ի համար: shadcn-ը համապատասխանում է HuVa-ի մաքուր aesthetic-ին:",
+    "nk.s3.r2a":"i18n","nk.s3.r2c":"Locale-prefix-ով routes (<code>/en/pivot</code>, <code>/hy/pivot</code>): Server-rendered:",
+    "nk.s3.r3a":"API","nk.s3.r3b":"2 Vercel Edge Functions","nk.s3.r3c":"Streams Claude-ի պատասխանները SSE-ով: 100ms-ից քիչ cold start:",
+    "nk.s3.r4a":"AI","nk.s3.r4c":"Native PDF support: Streaming output:",
+    "nk.s3.r5a":"Abuse կանխարգելում","nk.s3.r5c":"Անտեսանելի CAPTCHA generate endpoint-ում: Free tier:",
+    "nk.s3.r6a":"Storage","nk.s3.r6b":"v1-ում չկա","nk.s3.r6c":"Output-ը ապրում է browser-ում: Supabase share-links կավելացնենք v1.5-ում:",
+    "nk.s3.r7a":"PDF export","nk.s3.r7b":"Browser print CSS","nk.s3.r7c":"Server-ի ծախս զրո: <code>window.print()</code> + <code>@media print</code> stylesheet:",
+    "nk.s3.r8a":"Hosting / routing","nk.s3.r8c":"App-ը <code>huva-pivot.vercel.app</code>-ում: <code>huva.io/pivot/*</code> rewrites է իրեն:",
+    "nk.s4.t":"Արժեք",
+    "nk.s4.ci":"Տարր","nk.s4.cu":"Մեկ օգտագործում","nk.s4.cm":"/ ամսական @ 1k օգտագործում",
+    "nk.s4.r1":"Claude API · Sonnet (2 calls)",
+    "nk.s4.r2":"Vercel hosting","nk.s4.r2v":"$0 (free tier)",
+    "nk.s4.r3":"Cloudflare Turnstile",
+    "nk.s4.tr":"Ընդհանուր",
+    "nk.s5.t":"Կառուցման փուլեր",
+    "nk.s5.v1tag":"v1.0 · ուղարկել առաջինը","nk.s5.v1":"Հիմնական փորձառություն · 6–8 ժ",
+    "nk.s5.v1a":"Մեկ էջ, EN + ՀԱՅ, ամբողջ ուղի (role → diagnostic → CV → output → identity card)",
+    "nk.s5.v1b":"PDF ներբեռնում print CSS-ով",
+    "nk.s5.v1c":"Cloudflare Turnstile",
+    "nk.s5.v1d":"Մեղմ HuVa Academy CTA, մեկ տեղ",
+    "nk.s5.v15tag":"v1.5 · միայն եթե տրաֆիկը արդարացնի","nk.s5.v15":"Կիսում + persistence · +2 ժ",
+    "nk.s5.v15a":"Supabase row մեկ generation-ի համար, հանրային share URL-ներ",
+    "nk.s5.v15b":"OG image preview ամեն արդյունքի համար",
+    "nk.app.t":"Ինչ նշանակում է «հաստատված»",
+    "nk.app.i":"Եթե այս փաստաթուղթը քեզ դուր է գալիս, երեք checkbox-ով աշխատանքը մեկնարկում է:",
+    "nk.app.1":"v1 scope-ը կողպված է (ամեն ինչ վերևի 1-ին սյունակում, ոչ ավելին v1-ում)",
+    "nk.app.2":"Stack-ը հաստատված է (Next.js + Vercel + Anthropic + Cloudflare; v1-ում Supabase չկա)",
+    "nk.app.3":"Կառուցման բյուջեն 6–8 ժ կենտրոնացված աշխատանք է, թիրախ՝ launch 3 օրում",
+
+    "cx.eyebrow":"Ճարտարապետություն · Codex-ի առաջարկ",
+    "cx.title":"Կառուցել ամենապարզ տարբերակը, որը պահպանում է wow-ը",
+    "cx.lead":"Մեկ էջ: Մեկ AI call: Տվյալների բազա չկա: Հաշիվներ չկան: Պահված արդյունքներ չկան: Հանել ամեն ինչ, որ մեզ պետք չէ՝ պահելու օգտագործողի ընկալած արժեքի ~85–90%-ը:",
+    "cx.note.t":"Nick-ի reviewer-ի նշումը:",
+    "cx.note.b":" Codex-ը ճիշտ է երկու մեծ որոշումների մեջ — տեղական դետերմինիստիկ diagnostic և մեկ Claude call: Համաձայն չեմ abuse prevention-ը հանելու հետ; հանրային գործիքի համար, որը գումար արժե մեկ օգտագործման դիմաց, դա բաց դուռ է: <strong>Համեմատություն</strong> tab-ը պարունակում է լուծված տարբերակը, որը վերցնում է Codex-ի պարզացումները և պահում միակ պաշտպանությունը:",
+    "cx.s1.t":"Նպատակ",
+    "cx.s1.b":"Կառուցել պարզ, բարձր արժեքով AI career pivot գործիք HuVa-ի համար, որը ցույց է տալիս օգտատերերին, թե որքան է ենթարկված իրենց պաշտոնը AI-ին, և տալիս է անհատականացված 30-օրյա պիվոտի պլան CV-ի հիման վրա:",
+    "cx.s2.t":"Պարզացված ճարտարապետություն",
+    "cx.s2.b":"Diagnostic-ը ստատիկ lookup է: Անհատականացված պլանը միակ LLM-գեներացված մասն է: Վերջ:",
+    "cx.s3.t":"Ինչ ենք պահում",
+    "cx.s3.k1":"Ուժեղ hook՝ <em>«Քեզ կփոխարինի՞ Claude-ը»</em>","cx.s3.k2":"Երկլեզու EN/ՀԱՅ փորձառություն","cx.s3.k3":"Role-based AI exposure diagnostic","cx.s3.k4":"CV-ի վրա հիմնված անհատականացում","cx.s3.k5":"5 դասակարգված պիվոտ","cx.s3.k6":"30-օրյա գործնական պլան","cx.s3.k7":"LinkedIn դիրքավորում","cx.s3.k8":"3 պորտֆոլիո պրոյեկտ","cx.s3.k9":"Identity card","cx.s3.k10":"Browser PDF export","cx.s3.k11":"Մեկ ուժեղ HuVa Academy CTA",
+    "cx.s4.t":"Ինչ ենք հանում v1-ից",
+    "cx.s4.c1":"Login չկա","cx.s4.c2":"Վճարումներ չկան","cx.s4.c3":"Dashboard չկա","cx.s4.c4":"Պահված արդյունքի էջեր չկան","cx.s4.c5":"Supabase չկա","cx.s4.c6":"Անհատականացված share հղումներ չկան","cx.s4.c7":"Երկրորդ diagnostic API call չկա","cx.s4.c8":"Բարդ backend PDF generation չկա",
+    "cx.s5.t":"Ինչու է սա ավելի լավ",
+    "cx.s5.b":"Պահում է օգտագործողի ընկալած արժեքի ~85–90%-ը՝ հանելով տեխնիկական բարդության մեծ մասը: Արդյունքում:",
+    "cx.s5.l1":"Արագ կկառուցվի","cx.s5.l2":"Էժան կաշխատի","cx.s5.l3":"Հեշտ QA հայերեն և անգլերեն","cx.s5.l4":"Ավելի կայուն","cx.s5.l5":"Հեշտ launch որպես կամպանիայի գործիք","cx.s5.l6":"Դեռ բավական հզոր՝ օգտատերերին HuVa Academy lead-եր դարձնելու համար",
+    "cx.s6.t":"Առաջարկվող v1 scope","cx.s6.b":"Ինքնուրույն Next.js հավելված <code>/pivot</code>-ում՝",
+    "cx.s6.l1":"Տեղական role-risk տվյալներ ընդհանուր պաշտոնների համար","cx.s6.l2":"Մեկ <code>/api/plan</code> endpoint Claude-ով","cx.s6.l3":"Zod validation կառուցվածքային output-ի համար","cx.s6.l4":"EN/ՀԱՅ copy ֆայլեր","cx.s6.l5":"HuVa visual branding","cx.s6.l6":"Print CSS «Download PDF»-ի համար","cx.s6.l7":"Պարզ analytics՝ viewed diagnostic, submitted CV, generated result, clicked CTA",
+    "cx.s7.t":"Ani-ի ստուգման համար",
+    "cx.s7.l1":"Հիմնական խոստման հայերեն տարբերակը","cx.s7.l2":"Արդյոք AI-ռիսկի շրջանակումը մոտիվացնող է, ոչ թե սարսափեցնող","cx.s7.l3":"Արդյոք HuVa CTA-ն բնական է զգացվում արդյունքից հետո","cx.s7.l4":"Արդյոք 30-օրյա պլանը հավատալի և օգտակար է","cx.s7.l5":"Արդյոք identity card-ը մի բան է, որով մարդիկ իսկապես կկիսվեն",
+    "cx.rec.t":"Առաջարկ","cx.rec.b":"Կառուցել այս օպտիմիզացված v1-ը առաջինը, արագ launch անել, հետո ավելացնել պահված/կիսված արդյունքները միայն եթե մարդիկ իսկապես օգտագործում են:",
+
+    "cm.eyebrow":"Կողք-կողքի · իմ ազնիվ կարծիք · հիբրիդ ընտրությունը",
+    "cm.title":"Համեմատիր և որոշիր",
+    "cm.lead":"Ամեն տող ցույց է տալիս, թե ով հաղթում է: Հետո հիբրիդ առաջարկ, որը վերցնում է երկուսից լավագույնը:",
+    "cm.s1.t":"Որոշում առ որոշում",
+    "cm.col.a":"Ասպեկտ","cm.col.n":"Nick","cm.col.c":"Codex","cm.col.w":"Կարծիք",
+    "cm.w.nick":"Nick","cm.w.codex":"Codex","cm.w.tie":"Հավասար",
+    "cm.r1.a":"Diagnostic engine","cm.r1.n":"Փոքր Claude call · LLM-գեներացված","cm.r1.c":"Տեղական curated տվյալներ · դետերմինիստիկ","cm.r1.w":"— ավելի արագ, էժան, վկայելի, ավելի վերահսկելի",
+    "cm.r2.a":"Claude call-ների քանակ","cm.r2.n":"2 (diagnostic + plan)","cm.r2.c":"1 (միայն plan)","cm.r2.w":"— ավելի քիչ շարժվող մասեր, էժան, պարզ error handling",
+    "cm.r3.a":"Abuse կանխարգելում","cm.r3.n":"Cloudflare Turnstile (անտեսանելի)","cm.r3.c":"Չի նշված","cm.r3.w":"— հանրային գործիք + վճարովի LLM = կչարաշահվի առանց դրա",
+    "cm.r4.a":"Streaming output","cm.r4.n":"SSE բացահայտ · «watching it work»","cm.r4.c":"Չի նշված","cm.r4.w":"— ավելի լավ UX 20–30վրկ սպասման ընթացքում, ցածր լրացուցիչ արժեք",
+    "cm.r5.a":"PDF export","cm.r5.n":"Print CSS","cm.r5.c":"Print CSS",
+    "cm.r6.a":"Storage v1-ում","cm.r6.n":"Չկա","cm.r6.c":"Չկա",
+    "cm.r7.a":"Երկլեզու EN + ՀԱՅ","cm.r7.n":"next-intl, locale routes","cm.r7.c":"EN/ՀԱՅ copy ֆայլեր","cm.r7.w":"— նույն մտադրությունը, անվան տարբերություն",
+    "cm.r8.a":"LLM output-ի validation","cm.r8.n":"Implicit (TypeScript types)","cm.r8.c":"Zod schema validation","cm.r8.w":"— Zod-ը մաքուր բռնում է աղավաղված Claude պատասխանները",
+    "cm.r9.a":"Կառուցման գնահատական","cm.r9.n":"6–8 ժամ","cm.r9.c":"Ենթադրյալ 4–6 ժամ","cm.r9.w":"— մեկ Claude call + diagnostic logic կրճատելը = իսկական ժամանակի տնտեսում",
+    "cm.s2.t":"Հիբրիդը · ինչ պետք է իրականում կառուցենք",
+    "cm.hy.t":"Առաջարկվող v1 (հիբրիդ)",
+    "cm.hy.i":"Վերցնել Codex-ի պարզացումները: Պահել Nick-ի մեկ պաշտպանությունը: Արդյունքն ավելի սուր է, քան որևէ մեկը առանձին:",
+    "cm.hy.1":"<strong>Տեղական դետերմինիստիկ diagnostic</strong> curated role-risk տվյալներից (Codex)",
+    "cm.hy.2":"<strong>Մեկ Claude call ընդհանուր</strong> անհատականացված պլանի համար (Codex)",
+    "cm.hy.3":"<strong>Zod validation</strong> Claude-ի պատասխանի վրա (Codex)",
+    "cm.hy.4":"<strong>Cloudflare Turnstile</strong> generate endpoint-ում (Nick — ոչ բանակցելի)",
+    "cm.hy.5":"<strong>Streaming SSE-ով</strong> պլան գեներացիայի UX-ի համար (Nick — պահել եթե ժամանակ կա, այլապես պարզ await)",
+    "cm.hy.6":"<strong>Երկլեզու EN + ՀԱՅ</strong> next-intl-ով, locale-prefix-ով routes (երկուսն էլ)",
+    "cm.hy.7":"<strong>Print CSS PDF-ի համար</strong>, ոչ server-side renderer (երկուսն էլ)",
+    "cm.hy.8":"<strong>Vercel + huva.io rewrite</strong>, v1-ում Supabase չկա (երկուսն էլ)",
+    "cm.hy.budget":"<strong>Կառուցման բյուջե</strong>՝ 5–7 ժամ կենտրոնացված: Թիրախ launch 2–3 օրում:",
+    "cm.hy.cost":"<strong>Run cost</strong>՝ ~$30 / 1k generation (մեկ Sonnet call, ~3k in / ~3k out):",
+    "cm.s3.t":"Role-risk տվյալների ֆայլը (նոր մասը)",
+    "cm.s3.b":"Սա միակ նոր artifact-ն է, որ հիբրիդին պետք է: Ստատիկ JSON / TS ֆայլ curated diagnostic-ներով ~25 ընդհանուր պաշտոնների համար: Կառուցել մեկ անգամ, և ամեն diagnostic կաշխատի անմիջապես, առանց LLM ծախսի:",
+    "cm.s3.fb":"Անհայտ պաշտոնների fallback՝ ընդհանուր «մենք դեռ չունենք հատուկ տվյալներ այս պաշտոնի համար — ահա ընդհանուր augment-vs-automate framing-ը» diagnostic, որը դեռ զգում է անձնական:",
+    "cm.s4.t":"Ինչ նշանակում է հաստատված (հիբրիդ)",
+    "cm.s4.h":"Երեք checkbox launch-ի համար",
+    "cm.s4.1":"Հիբրիդ scope-ը կողպված է (վերևի 8 կետերը, ոչ ավելին v1-ում)",
+    "cm.s4.2":"~25 մեկնարկային պաշտոն <code>role-risk.ts</code>-ում — համաձայնեցված ցուցակ նախքան կոդի մեկնարկը",
+    "cm.s4.3":"Կառուցման բյուջե 5–7 ժ, ուղարկում 2–3 օրում, հետո նայում ենք v1.5-ին միայն եթե տրաֆիկը արդարացնում է",
+    "cm.s4.next":"Հաստատվելուց հետո մենք անցնում ենք implementation plan-ին. քայլ-առ-քայլ build sheet կազմակերպված հերթականությամբ:",
+
     "nav.wireframe":"← Հետ մակետին",
-    "nav.feedback":"Թող հետադարձ կապ այս փաստաթղթի վրա →",
+    "nav.feedback":"Թող հետադարձ կապ →",
     "nav.repo":"Source GitHub-ում →"
   }
 };
 
 let LANG = (localStorage.getItem("huva-lang")||"en");
-function setLang(l){
-  LANG = l;
-  localStorage.setItem("huva-lang", l);
-  document.documentElement.lang = (l==="hy"?"hy":"en");
+let TAB  = (localStorage.getItem("huva-arch-tab")||"compare");
+
+function applyI18n(){
+  document.documentElement.lang = (LANG==="hy"?"hy":"en");
   document.querySelectorAll("[data-i18n]").forEach(el=>{
     const k = el.dataset.i18n;
     const v = T[LANG][k];
@@ -468,7 +729,21 @@ function setLang(l){
   });
   document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active", b.dataset.lang===LANG));
 }
-setLang(LANG);
+function setLang(l){
+  LANG = l;
+  localStorage.setItem("huva-lang", l);
+  applyI18n();
+}
+function setTab(name){
+  TAB = name;
+  localStorage.setItem("huva-arch-tab", name);
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("panel-"+name).classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active", t.dataset.tab===name));
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+applyI18n();
+setTab(TAB);
 </script>
 </body>
 </html>
