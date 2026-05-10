@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>HuVa Pivot — Wireframe</title>
 <meta name="description" content="Will Claude take your job? See your AI exposure and your pivot plan. Wireframe v1.">
+<meta property="og:title" content="HuVa Pivot — Will Claude take your job?">
+<meta property="og:description" content="Click-through wireframe of HuVa's Career Pivot Agent. Anchored in Anthropic Economic Index 2026 data. Mock data — for partner review.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nickbrutyan-folder.github.io/huva-pivot-wireframe/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="HuVa Pivot — Will Claude take your job?">
+<meta name="twitter:description" content="Click-through wireframe of HuVa's Career Pivot Agent. For partner review.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -295,14 +302,45 @@
 <!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <p><strong style="color:var(--ink)">This is a wireframe.</strong> Mock data only. The real version uses your CV + Anthropic API to generate everything you see. The point of this page is to validate the experience flow before we build it.</p>
-    <div class="feedback-box">
-      <strong>Ani — leave thoughts here:</strong>
-      <textarea placeholder="What's missing? What should we cut? Where does it lose you?"></textarea>
+    <p><strong style="color:var(--ink)">This is a wireframe.</strong> Mock data only. The real version will use your CV + Anthropic API to generate everything you see. This page exists to validate the experience flow before we build it.</p>
+
+    <div class="feedback-box" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center">
+      <div>
+        <strong style="display:block;margin-bottom:4px">Leave detailed feedback</strong>
+        <span style="font-size:13px;color:var(--muted)">Opens a GitHub issue, takes 30 seconds.</span>
+      </div>
+      <div style="text-align:right">
+        <a class="btn primary" href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues/new?template=feedback.yml&title=Wireframe+feedback" target="_blank" rel="noopener">Leave a comment →</a>
+      </div>
     </div>
+
+    <div class="feedback-box" style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:10px">
+      <div>
+        <strong style="display:block;margin-bottom:4px">Share this wireframe</strong>
+        <code style="font-size:12px;color:var(--muted);word-break:break-all">https://nickbrutyan-folder.github.io/huva-pivot-wireframe/</code>
+      </div>
+      <button class="btn ghost" id="copy-btn" onclick="copyShare()">Copy link</button>
+    </div>
+
+    <div style="margin-top:14px;font-size:13px">
+      <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">See all comments &amp; issues →</a>
+    </div>
+
     <p style="margin-top:24px;font-size:12px">Built with Claude · HuVa POC · <span class="mono">v1.0</span></p>
   </div>
 </footer>
+
+<script>
+function copyShare(){
+  const url = "https://nickbrutyan-folder.github.io/huva-pivot-wireframe/";
+  navigator.clipboard.writeText(url).then(()=>{
+    const b = document.getElementById("copy-btn");
+    const orig = b.textContent;
+    b.textContent = "Copied ✓";
+    setTimeout(()=>b.textContent = orig, 1500);
+  });
+}
+</script>
 
 <script>
 /* DATA MODEL — three roles fully fleshed for partner review */

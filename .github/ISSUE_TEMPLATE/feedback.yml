@@ -1,0 +1,62 @@
+name: Wireframe feedback
+description: Leave thoughts on the HuVa Pivot wireframe v1
+title: "Wireframe feedback: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking a look. Be honest — direction-changing feedback is more useful than polite feedback.
+  - type: textarea
+    id: gut
+    attributes:
+      label: Gut reaction
+      description: What's the first thing you thought when you landed on the page?
+      placeholder: "e.g. The headline is too aggressive / too soft / hits right..."
+    validations:
+      required: false
+  - type: textarea
+    id: cut
+    attributes:
+      label: What should we cut?
+      description: Anything that feels redundant, confusing, or like it adds friction.
+      placeholder: "e.g. The CV upload step still feels heavy..."
+    validations:
+      required: false
+  - type: textarea
+    id: add
+    attributes:
+      label: What's missing?
+      description: Anything you expected to see and didn't.
+      placeholder: "e.g. I'd want to know roughly when the pivot pays off in salary terms..."
+    validations:
+      required: false
+  - type: dropdown
+    id: hook
+    attributes:
+      label: Is "Will Claude take your job?" the right hook for HuVa?
+      options:
+        - Yes, exactly right
+        - Right direction, soften it
+        - Too fearmongering — change it
+        - Other (explain in comments)
+    validations:
+      required: false
+  - type: dropdown
+    id: ship
+    attributes:
+      label: Would you ship this?
+      options:
+        - Ship as-is
+        - Ship after small tweaks
+        - Ship after a real round of revisions
+        - Don't ship — rethink
+    validations:
+      required: false
+  - type: textarea
+    id: anything
+    attributes:
+      label: Anything else
+      placeholder: "Free space — strategy, design, copy, business model, anything."
+    validations:
+      required: false
