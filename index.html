@@ -14,7 +14,7 @@
 <meta name="twitter:description" content="Click-through wireframe of HuVa's Career Pivot Agent. For partner review.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Armenian:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#fafaf7; --ink:#0a0a0a; --muted:#6b6b6b; --line:#e8e6e1;
@@ -23,50 +23,50 @@
     --radius:14px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:'Inter','Noto Sans Armenian',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  html[lang="hy"] body{font-family:'Noto Sans Armenian','Inter',system-ui,sans-serif}
   a{color:inherit}
   button{font-family:inherit;cursor:pointer;border:none}
   .mono{font-family:'JetBrains Mono',monospace}
 
-  /* WIREFRAME BANNER */
-  .wf-bar{position:sticky;top:0;z-index:50;background:#0a0a0a;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .wf-bar{position:sticky;top:0;z-index:50;background:#0a0a0a;color:#fff;padding:8px 16px;font-size:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
   .wf-bar .pill{background:#e94560;color:#fff;padding:2px 8px;border-radius:99px;font-weight:600;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
-  .wf-bar select{background:#1a1a1a;color:#fff;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px}
+  .wf-bar .ctrls{display:flex;gap:8px;align-items:center}
+  .wf-bar select, .wf-bar .lang{background:#1a1a1a;color:#fff;border:1px solid #333;padding:4px 8px;border-radius:6px;font-size:12px;cursor:pointer}
+  .wf-bar .lang{font-weight:600;letter-spacing:.5px}
+  .wf-bar .lang.active{background:#e94560;border-color:#e94560}
+  .wf-bar .arch-link{color:#fff;text-decoration:none;border:1px solid #333;padding:4px 10px;border-radius:6px;font-size:12px}
+  .wf-bar .arch-link:hover{background:#1a1a1a}
 
-  /* LAYOUT */
   .wrap{max-width:980px;margin:0 auto;padding:0 24px}
   .stack{display:flex;flex-direction:column;gap:24px}
-  .row{display:flex;gap:16px;flex-wrap:wrap}
 
-  /* HERO */
   .hero{padding:80px 0 56px;background:radial-gradient(1200px 400px at 50% -10%,#ffe9ec 0%,transparent 60%)}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:12px;color:var(--muted);font-weight:500}
   .eyebrow .dot{width:6px;height:6px;border-radius:99px;background:var(--accent)}
-  h1.title{font-size:clamp(36px,6vw,64px);line-height:1.05;letter-spacing:-.02em;font-weight:800;margin:18px 0 10px}
-  .subtitle{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:560px;line-height:1.55;margin:0 0 28px}
-  .input-wrap{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.04);max-width:560px}
+  h1.title{font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.02em;font-weight:800;margin:18px 0 10px}
+  .subtitle{font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:600px;line-height:1.55;margin:0 0 28px}
+  .input-wrap{display:flex;gap:8px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px;box-shadow:0 8px 32px rgba(0,0,0,.04);max-width:580px}
   .input-wrap input{flex:1;min-width:200px;border:0;outline:0;padding:14px 16px;font-size:16px;background:transparent;font-family:inherit}
-  .btn{background:var(--ink);color:#fff;padding:14px 20px;border-radius:10px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease,opacity .15s ease}
+  .btn{background:var(--ink);color:#fff;padding:14px 20px;border-radius:10px;font-weight:600;font-size:14px;display:inline-flex;align-items:center;gap:8px;transition:transform .15s ease}
   .btn:hover{transform:translateY(-1px)}
   .btn.primary{background:var(--accent)}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
   .hero-meta{margin-top:14px;color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px}
   .hero-meta .built{display:inline-block;width:8px;height:8px;border-radius:99px;background:var(--good)}
 
-  /* SECTION */
   section{padding:48px 0;border-top:1px solid var(--line)}
   .section-label{font-size:11px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:600;margin-bottom:8px}
   h2{font-size:clamp(24px,3.5vw,36px);line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:700}
 
-  /* DIAGNOSTIC */
   .diag-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:stretch}
   @media (max-width:760px){.diag-grid{grid-template-columns:1fr}}
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:transform .2s ease,box-shadow .2s ease}
   .card:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.05)}
   .big-num{font-size:84px;font-weight:800;line-height:1;letter-spacing:-.04em;background:linear-gradient(180deg,#e94560,#1a1a1a);-webkit-background-clip:text;background-clip:text;color:transparent}
   .splitbar{height:14px;border-radius:99px;background:var(--line);overflow:hidden;display:flex;margin:10px 0 8px}
-  .splitbar > div{height:100%}
-  .legend{display:flex;gap:16px;font-size:13px;color:var(--muted)}
+  .splitbar > div{height:100%;transition:width 1s ease}
+  .legend{display:flex;gap:16px;font-size:13px;color:var(--muted);flex-wrap:wrap}
   .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle}
   .task-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line)}
   .task-row:last-child{border-bottom:0}
@@ -75,7 +75,6 @@
   .tag-aug{background:#ecfeff;color:#0e7490}
   .tag-safe{background:#ecfdf5;color:#065f46}
 
-  /* PIVOTS */
   .pivots{display:flex;flex-direction:column;gap:8px}
   .pivot{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;transition:all .15s ease}
   .pivot:hover{border-color:var(--accent);background:#fff8f9}
@@ -85,90 +84,81 @@
   .pivot .gap{color:var(--muted);font-size:13px}
   .pivot .badge{background:var(--accent);color:#fff;padding:2px 8px;border-radius:99px;font-size:10px;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
 
-  /* 30 DAY GRID */
   .weeks{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
   @media (max-width:760px){.weeks{grid-template-columns:repeat(2,1fr)}}
   .week{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;min-height:140px}
   .week .wlabel{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px}
   .week .wbody{font-size:13px;line-height:1.55;color:var(--ink)}
 
-  /* LINKEDIN BLOCK */
   .li{background:#f4f6f9;border:1px solid var(--line);border-radius:12px;padding:18px;font-size:14px;line-height:1.6}
   .li small{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:600}
   .li .head{font-weight:700;margin:6px 0 14px}
   .copy-btn{background:#fff;border:1px solid var(--line);padding:6px 10px;border-radius:6px;font-size:12px;font-weight:500}
 
-  /* PORTFOLIO + FUNNEL */
   .portfolio{background:linear-gradient(135deg,#fff8f9,#fff 60%);border:1px solid var(--line);border-radius:var(--radius);padding:24px}
-  .proj-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:14px}
+  .proj-row{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;font-size:14px;flex-wrap:wrap;gap:8px}
   .proj-row .day{color:var(--accent);font-weight:600;font-size:12px}
   .funnel-cta{margin-top:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:14px;background:#0a0a0a;color:#fff;border-radius:12px}
   .funnel-cta .text{font-size:14px;line-height:1.5}
   .funnel-cta .text strong{color:#ffd6dd}
 
-  /* IDENTITY CARD */
   .id-card-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
   @media (max-width:760px){.id-card-wrap{grid-template-columns:1fr}}
   .id-card{background:linear-gradient(135deg,#0a0a0a 0%,#1a1a1a 100%);color:#fff;border-radius:18px;padding:28px;position:relative;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2)}
   .id-card::before{content:"";position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(233,69,96,.4),transparent 60%)}
   .id-card .brand{font-size:11px;letter-spacing:2px;color:#999;text-transform:uppercase;font-weight:600}
   .id-card .name{font-size:22px;font-weight:700;margin:8px 0 4px}
-  .id-card .new-role{font-size:28px;font-weight:800;background:linear-gradient(180deg,#fff,#ffd6dd);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px}
+  .id-card .new-role{font-size:26px;font-weight:800;background:linear-gradient(180deg,#fff,#ffd6dd);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:18px;line-height:1.2}
   .id-card .stat{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #333;font-size:13px}
   .id-card .stat:last-child{border-bottom:0}
   .id-card .stat span:first-child{color:#999}
   .id-card .stat .ok{color:#10b981;font-weight:600}
 
-  /* FAQ-LIKE FOOTER */
   footer{padding:40px 0 80px;color:var(--muted);font-size:13px;line-height:1.6;border-top:1px solid var(--line)}
-  .feedback-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:14px}
-  .feedback-box textarea{width:100%;border:0;outline:0;resize:vertical;min-height:60px;font-family:inherit;font-size:14px}
+  .feedback-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:14px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
 
-  /* HIDDEN STAGES */
   .stage{transition:opacity .4s ease,transform .4s ease}
   .stage.is-hidden{opacity:0;transform:translateY(8px);pointer-events:none;position:absolute;left:-9999px}
 
-  /* ANIMATIONS */
   @keyframes fadeIn{from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)}}
   .reveal{animation:fadeIn .6s ease both}
 </style>
 </head>
 <body>
 
-<!-- WIREFRAME BAR -->
 <div class="wf-bar">
-  <div><span class="pill">Wireframe v1</span> <span style="opacity:.7;margin-left:8px">HuVa Pivot · share-link for review · click anywhere to interact</span></div>
-  <div>
-    <label style="opacity:.7">Preview as:</label>
+  <div><span class="pill" data-i18n="wf.pill">Wireframe v1</span> <span style="opacity:.7;margin-left:8px" data-i18n="wf.tagline">HuVa Pivot · click anywhere to interact</span></div>
+  <div class="ctrls">
+    <a class="arch-link" href="architecture.html" data-i18n="wf.arch">Architecture →</a>
+    <label style="opacity:.7" data-i18n="wf.preview">Preview as:</label>
     <select id="role-picker">
       <option value="marketing">Marketing Manager</option>
       <option value="engineer">Software Engineer</option>
       <option value="support">Customer Service Rep</option>
     </select>
+    <button class="lang active" data-lang="en" onclick="setLang('en')">EN</button>
+    <button class="lang" data-lang="hy" onclick="setLang('hy')">ՀԱՅ</button>
   </div>
 </div>
 
-<!-- HERO -->
 <header class="hero">
   <div class="wrap">
-    <span class="eyebrow"><span class="dot"></span>Anthropic Economic Index · Feb 2026</span>
-    <h1 class="title">Will Claude take your job?</h1>
-    <p class="subtitle">Drop your role. We'll show you exactly which of your tasks AI is already doing — and your pivot path. 10 seconds, no signup.</p>
+    <span class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">Anthropic Economic Index · Feb 2026</span></span>
+    <h1 class="title" data-i18n="hero.title">Will Claude take your job?</h1>
+    <p class="subtitle" data-i18n="hero.subtitle">Drop your role. We'll show you exactly which of your tasks AI is already doing — and your pivot path. 10 seconds, no signup.</p>
 
-    <!-- STAGE 1: ROLE INPUT -->
     <div id="stage-input" class="stage">
       <div class="input-wrap">
-        <input id="role-input" type="text" placeholder="Marketing Manager" />
-        <button class="btn primary" onclick="goDiagnostic()">See my AI risk →</button>
+        <input id="role-input" type="text" />
+        <button class="btn primary" onclick="goDiagnostic()" data-i18n="hero.cta">See my AI risk →</button>
       </div>
-      <div class="hero-meta"><span class="built"></span>Built with Claude · grounded in real Anthropic research</div>
+      <div class="hero-meta"><span class="built"></span><span data-i18n="hero.meta">Built with Claude · grounded in real Anthropic research</span></div>
     </div>
 
-    <!-- STAGE 2: DIAGNOSTIC -->
     <div id="stage-diagnostic" class="stage is-hidden">
       <div class="diag-grid reveal">
         <div class="card">
-          <div class="section-label">your AI exposure</div>
+          <div class="section-label" data-i18n="diag.exp">your AI exposure</div>
           <div class="big-num"><span id="exposure-num">0</span>%</div>
           <p style="color:var(--muted);font-size:14px;margin:6px 0 14px;line-height:1.55"><span id="exposure-blurb"></span></p>
           <div class="splitbar">
@@ -177,323 +167,453 @@
             <div id="bar-safe" style="background:#10b981;width:0%"></div>
           </div>
           <div class="legend">
-            <div><i style="background:#0e7490"></i><span id="leg-aug">Augmented 0%</span></div>
-            <div><i style="background:#e94560"></i><span id="leg-auto">Automated 0%</span></div>
-            <div><i style="background:#10b981"></i><span id="leg-safe">Untouched 0%</span></div>
+            <div><i style="background:#0e7490"></i><span id="leg-aug"></span></div>
+            <div><i style="background:#e94560"></i><span id="leg-auto"></span></div>
+            <div><i style="background:#10b981"></i><span id="leg-safe"></span></div>
           </div>
         </div>
         <div class="card">
-          <div class="section-label">your tasks · what's happening</div>
+          <div class="section-label" data-i18n="diag.tasks">your tasks · what's happening</div>
           <div id="task-list"></div>
-          <div style="margin-top:14px;font-size:12px;color:var(--muted)">Source: Anthropic Economic Index, occupational task analysis (Feb 2026).</div>
+          <div style="margin-top:14px;font-size:12px;color:var(--muted)" data-i18n="diag.source">Source: Anthropic Economic Index, occupational task analysis (Feb 2026).</div>
         </div>
       </div>
-
       <div style="margin-top:24px;display:flex;justify-content:center">
-        <button class="btn primary" onclick="goCV()">Now show me my pivot →</button>
+        <button class="btn primary" onclick="goCV()" data-i18n="diag.cta">Now show me my pivot →</button>
       </div>
     </div>
 
-    <!-- STAGE 3: CV INPUT -->
     <div id="stage-cv" class="stage is-hidden">
       <div class="card reveal" style="max-width:640px">
-        <div class="section-label">step 2</div>
-        <h2 style="font-size:24px">Drop your CV — or paste it</h2>
-        <p style="color:var(--muted);margin-top:0">We'll match your real skills to your best pivot. Takes 30 seconds. We don't store anything.</p>
+        <div class="section-label" data-i18n="cv.step">step 2</div>
+        <h2 style="font-size:24px" data-i18n="cv.title">Drop your CV — or paste it</h2>
+        <p style="color:var(--muted);margin-top:0" data-i18n="cv.subtitle">We'll match your real skills to your best pivot. Takes 30 seconds. We don't store anything.</p>
         <div style="border:2px dashed var(--line);border-radius:12px;padding:28px;text-align:center;background:#fafaf7;cursor:pointer" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--line)'">
           <div style="font-size:32px;color:var(--muted);margin-bottom:6px">↑</div>
-          <div style="font-weight:600">Drop your CV (PDF) here</div>
-          <div style="font-size:13px;color:var(--muted);margin-top:4px">or <a href="#" onclick="event.preventDefault();document.getElementById('cv-text').focus()" style="color:var(--accent);font-weight:500">paste the text instead</a></div>
+          <div style="font-weight:600" data-i18n="cv.drop">Drop your CV (PDF) here</div>
+          <div style="font-size:13px;color:var(--muted);margin-top:4px"><span data-i18n="cv.or">or </span><a href="#" onclick="event.preventDefault();document.getElementById('cv-text').focus()" style="color:var(--accent);font-weight:500" data-i18n="cv.paste">paste the text instead</a></div>
         </div>
-        <textarea id="cv-text" placeholder="Or paste your CV text here..." style="width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;min-height:80px;outline:0"></textarea>
-        <div style="margin-top:14px;display:flex;gap:10px">
-          <button class="btn primary" onclick="goPlan()">Generate my pivot plan →</button>
-          <button class="btn ghost" onclick="goPlan()">Skip · use sample CV</button>
+        <textarea id="cv-text" style="width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:14px;resize:vertical;min-height:80px;outline:0"></textarea>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn primary" onclick="goPlan()" data-i18n="cv.cta">Generate my pivot plan →</button>
+          <button class="btn ghost" onclick="goPlan()" data-i18n="cv.skip">Skip · use sample CV</button>
         </div>
       </div>
     </div>
   </div>
 </header>
 
-<!-- STAGE 4: PIVOT PLAN -->
 <div id="stage-plan" class="stage is-hidden">
-
-  <!-- 5 PIVOTS -->
   <section>
     <div class="wrap">
-      <div class="section-label">5 pivots ranked for your skills</div>
-      <h2 id="pivot-headline">Marketing Manager → 5 paths forward</h2>
-      <p class="subtitle">Closer to your current strengths = lower skill gap. Best fit at the top.</p>
+      <div class="section-label" data-i18n="pivots.label">5 pivots ranked for your skills</div>
+      <h2 id="pivot-headline"></h2>
+      <p class="subtitle" data-i18n="pivots.subtitle">Closer to your current strengths = lower skill gap. Best fit at the top.</p>
       <div id="pivots" class="pivots"></div>
     </div>
   </section>
 
-  <!-- 30-DAY PLAN -->
   <section>
     <div class="wrap">
-      <div class="section-label">your 30-day plan</div>
-      <h2 id="plan-headline">Pivot in 30 days · 30 minutes a day</h2>
-      <p class="subtitle">Each week = one concrete agent you build. By Day 30 you have a portfolio, not a course certificate.</p>
+      <div class="section-label" data-i18n="plan.label">your 30-day plan</div>
+      <h2 data-i18n="plan.headline">Pivot in 30 days · 30 minutes a day</h2>
+      <p class="subtitle" data-i18n="plan.subtitle">Each week = one concrete agent you build. By Day 30 you have a portfolio, not a course certificate.</p>
       <div id="weeks" class="weeks"></div>
     </div>
   </section>
 
-  <!-- LINKEDIN -->
   <section>
     <div class="wrap">
-      <div class="section-label">your linkedin · copy + paste</div>
-      <h2>Your new positioning · ready tonight</h2>
+      <div class="section-label" data-i18n="li.label">your linkedin · copy + paste</div>
+      <h2 data-i18n="li.title">Your new positioning · ready tonight</h2>
       <div class="li" style="margin-top:16px">
-        <small>HEADLINE</small>
+        <small data-i18n="li.headline">HEADLINE</small>
         <div class="head" id="li-headline"></div>
-        <small>ABOUT</small>
+        <small data-i18n="li.about">ABOUT</small>
         <div id="li-about" style="margin-top:6px"></div>
-        <button class="copy-btn" style="margin-top:12px">Copy both</button>
+        <button class="copy-btn" style="margin-top:12px" data-i18n="li.copy">Copy both</button>
       </div>
     </div>
   </section>
 
-  <!-- PORTFOLIO + FUNNEL -->
   <section>
     <div class="wrap">
-      <div class="section-label">portfolio · 3 projects to build</div>
-      <h2>Build these 3 in your 30 days</h2>
-      <p class="subtitle">Each is a real, shippable agent. Recruiters see "AI Marketing Lead", not "marketing manager who took a course".</p>
+      <div class="section-label" data-i18n="proj.label">portfolio · 3 projects to build</div>
+      <h2 data-i18n="proj.title">Build these 3 in your 30 days</h2>
+      <p class="subtitle" data-i18n="proj.subtitle">Each is a real, shippable agent. Recruiters see "AI Marketing Lead", not "marketing manager who took a course".</p>
       <div class="portfolio" style="margin-top:16px">
         <div id="projects"></div>
         <div class="funnel-cta">
-          <div class="text">All 3 are taught hands-on at <strong>HuVa Academy</strong>. Next cohort: May 20.</div>
-          <button class="btn primary">Build them with us →</button>
+          <div class="text" data-i18n="proj.cta">All 3 are taught hands-on at <strong>HuVa Academy</strong>. Next cohort: May 20.</div>
+          <button class="btn primary" data-i18n="proj.btn">Build them with us →</button>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- IDENTITY CARD -->
   <section>
     <div class="wrap">
-      <div class="section-label">share your pivot</div>
-      <h2>Your AI-augmented identity</h2>
-      <p class="subtitle">A card to share on LinkedIn — or send to your manager when you're asking for the new title.</p>
+      <div class="section-label" data-i18n="id.label">share your pivot</div>
+      <h2 data-i18n="id.title">Your AI-augmented identity</h2>
+      <p class="subtitle" data-i18n="id.subtitle">A card to share on LinkedIn — or send to your manager when you're asking for the new title.</p>
       <div class="id-card-wrap" style="margin-top:24px">
         <div class="id-card">
-          <div class="brand">HuVa · AI-Augmented Identity</div>
-          <div class="name" id="id-name">Maria S.</div>
-          <div class="new-role" id="id-role">AI-Augmented Marketing Lead</div>
-          <div class="stat"><span>AI exposure</span><span id="id-exp">47%</span></div>
-          <div class="stat"><span>Pivot risk</span><span class="ok" id="id-risk">Low</span></div>
-          <div class="stat"><span>30-day plan</span><span class="ok">✓ Started</span></div>
-          <div class="stat"><span>Portfolio</span><span class="ok">3 agents · in flight</span></div>
+          <div class="brand" data-i18n="id.brand">HuVa · AI-Augmented Identity</div>
+          <div class="name" id="id-name"></div>
+          <div class="new-role" id="id-role"></div>
+          <div class="stat"><span data-i18n="id.exposure">AI exposure</span><span id="id-exp"></span></div>
+          <div class="stat"><span data-i18n="id.risk">Pivot risk</span><span class="ok" id="id-risk"></span></div>
+          <div class="stat"><span data-i18n="id.plan30">30-day plan</span><span class="ok" data-i18n="id.started">✓ Started</span></div>
+          <div class="stat"><span data-i18n="id.portfolio">Portfolio</span><span class="ok" data-i18n="id.flight">3 agents · in flight</span></div>
         </div>
         <div>
           <div style="display:flex;flex-direction:column;gap:8px;max-width:280px">
-            <button class="btn primary" style="width:100%;justify-content:center">Share to LinkedIn</button>
-            <button class="btn ghost" style="width:100%;justify-content:center">Download as PDF</button>
-            <button class="btn ghost" style="width:100%;justify-content:center">Copy share link</button>
-            <button class="btn ghost" style="width:100%;justify-content:center" onclick="reset()">↻ Try a different role</button>
+            <button class="btn primary" style="width:100%;justify-content:center" data-i18n="id.linkedin">Share to LinkedIn</button>
+            <button class="btn ghost" style="width:100%;justify-content:center" data-i18n="id.pdf">Download as PDF</button>
+            <button class="btn ghost" style="width:100%;justify-content:center" data-i18n="id.share">Copy share link</button>
+            <button class="btn ghost" style="width:100%;justify-content:center" onclick="reset()" data-i18n="id.again">↻ Try a different role</button>
           </div>
         </div>
       </div>
     </div>
   </section>
-
 </div>
 
-<!-- FOOTER -->
 <footer>
   <div class="wrap">
-    <p><strong style="color:var(--ink)">This is a wireframe.</strong> Mock data only. The real version will use your CV + Anthropic API to generate everything you see. This page exists to validate the experience flow before we build it.</p>
+    <p><strong style="color:var(--ink)" data-i18n="foot.this">This is a wireframe.</strong> <span data-i18n="foot.body">Mock data only. The real version uses your CV + Anthropic API to generate everything you see. This page exists to validate the experience flow before we build it.</span></p>
 
-    <div class="feedback-box" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:center">
+    <div class="feedback-box">
       <div>
-        <strong style="display:block;margin-bottom:4px">Leave detailed feedback</strong>
-        <span style="font-size:13px;color:var(--muted)">Opens a GitHub issue, takes 30 seconds.</span>
+        <strong style="display:block;margin-bottom:4px" data-i18n="foot.fb.title">Leave detailed feedback</strong>
+        <span style="font-size:13px;color:var(--muted)" data-i18n="foot.fb.sub">Opens a GitHub issue, takes 30 seconds.</span>
       </div>
-      <div style="text-align:right">
-        <a class="btn primary" href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues/new?template=feedback.yml&title=Wireframe+feedback" target="_blank" rel="noopener">Leave a comment →</a>
-      </div>
+      <a class="btn primary" href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues/new?template=feedback.yml&title=Wireframe+feedback" target="_blank" rel="noopener" data-i18n="foot.fb.btn">Leave a comment →</a>
     </div>
 
-    <div class="feedback-box" style="display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-top:10px">
+    <div class="feedback-box">
       <div>
-        <strong style="display:block;margin-bottom:4px">Share this wireframe</strong>
+        <strong style="display:block;margin-bottom:4px" data-i18n="foot.share.title">Share this wireframe</strong>
         <code style="font-size:12px;color:var(--muted);word-break:break-all">https://nickbrutyan-folder.github.io/huva-pivot-wireframe/</code>
       </div>
-      <button class="btn ghost" id="copy-btn" onclick="copyShare()">Copy link</button>
+      <button class="btn ghost" id="copy-btn" onclick="copyShare()" data-i18n="foot.share.btn">Copy link</button>
     </div>
 
     <div style="margin-top:14px;font-size:13px">
-      <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none">See all comments &amp; issues →</a>
+      <a href="https://github.com/nickbrutyan-folder/huva-pivot-wireframe/issues" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none" data-i18n="foot.allcomments">See all comments &amp; issues →</a>
+      &nbsp;·&nbsp;
+      <a href="architecture.html" style="color:var(--accent);text-decoration:none" data-i18n="foot.arch">Read the architecture doc →</a>
     </div>
-
     <p style="margin-top:24px;font-size:12px">Built with Claude · HuVa POC · <span class="mono">v1.0</span></p>
   </div>
 </footer>
 
 <script>
-function copyShare(){
-  const url = "https://nickbrutyan-folder.github.io/huva-pivot-wireframe/";
-  navigator.clipboard.writeText(url).then(()=>{
-    const b = document.getElementById("copy-btn");
-    const orig = b.textContent;
-    b.textContent = "Copied ✓";
-    setTimeout(()=>b.textContent = orig, 1500);
-  });
-}
-</script>
-
-<script>
-/* DATA MODEL — three roles fully fleshed for partner review */
-const ROLES = {
-  marketing:{
-    title:"Marketing Manager",
-    name:"Maria S.",
-    exposure:47,
-    aug:38, auto:47, safe:15,
-    blurb:"You're in the augment lane — AI is helping with most of your work, not replacing the role. But the job description for hiring you is changing fast.",
-    tasks:[
-      {label:"Write campaign briefs", tag:"auto", text:"Claude does this in seconds."},
-      {label:"Analyze campaign performance", tag:"aug", text:"Claude drafts the read; you decide."},
-      {label:"Manage stakeholder relationships", tag:"safe", text:"Still you. Always you."},
-      {label:"Optimize landing page copy", tag:"auto", text:"AI ships variants overnight."},
-    ],
-    newRole:"AI-Augmented Marketing Lead",
-    risk:"Low",
-    pivots:[
-      {name:"AI-Augmented Marketing Lead", gap:"22%", best:true},
-      {name:"Marketing Ops Engineer (Claude / n8n)", gap:"35%"},
-      {name:"Brand Strategist for AI startups", gap:"28%"},
-      {name:"Content Systems Designer", gap:"31%"},
-      {name:"Independent AI Marketing Consultant", gap:"40%"},
-    ],
-    weeks:[
-      {label:"Week 1", text:"Master Claude Projects + Artifacts. Build a campaign brief analyzer."},
-      {label:"Week 2", text:"Build a landing-page optimizer with brand-voice lock."},
-      {label:"Week 3", text:"Build a campaign performance reviewer. Wire to your real GA data."},
-      {label:"Week 4", text:"Package the 3 agents as your portfolio. Apply to 5 target roles."},
-    ],
-    headline:"Marketing Lead · Building AI-augmented brand systems · 8 yrs scaling content ops",
-    about:"I run marketing the way 2026 actually works — small teams, leverage from agents, brand voice locked in workflow. I've spent 8 years building content engines at scale. Now I'm wiring them up with Claude. My portfolio: a brief analyzer, an LP optimizer, and a performance review agent — all running on real data.",
-    projects:[
-      {name:"Brief analyzer agent", day:"HuVa · Day 4"},
-      {name:"LP optimizer with brand-voice lock", day:"HuVa · Day 7"},
-      {name:"Telegram brand-voice bot", day:"HuVa · Day 10"},
-    ],
+const T = {
+  en: {
+    "wf.pill":"Wireframe v1",
+    "wf.tagline":"HuVa Pivot · click anywhere to interact",
+    "wf.arch":"Architecture →",
+    "wf.preview":"Preview as:",
+    "hero.eyebrow":"Anthropic Economic Index · Feb 2026",
+    "hero.title":"Will Claude take your job?",
+    "hero.subtitle":"Drop your role. We'll show you exactly which of your tasks AI is already doing — and your pivot path. 10 seconds, no signup.",
+    "hero.cta":"See my AI risk →",
+    "hero.meta":"Built with Claude · grounded in real Anthropic research",
+    "diag.exp":"your AI exposure",
+    "diag.tasks":"your tasks · what's happening",
+    "diag.source":"Source: Anthropic Economic Index, occupational task analysis (Feb 2026).",
+    "diag.cta":"Now show me my pivot →",
+    "leg.aug":"Augmented","leg.auto":"Automated","leg.safe":"Untouched",
+    "tag.auto":"AUTOMATED","tag.aug":"AUGMENTED","tag.safe":"UNTOUCHED",
+    "cv.step":"step 2","cv.title":"Drop your CV — or paste it",
+    "cv.subtitle":"We'll match your real skills to your best pivot. Takes 30 seconds. We don't store anything.",
+    "cv.drop":"Drop your CV (PDF) here","cv.or":"or ","cv.paste":"paste the text instead",
+    "cv.placeholder":"Or paste your CV text here...",
+    "cv.cta":"Generate my pivot plan →","cv.skip":"Skip · use sample CV",
+    "pivots.label":"5 pivots ranked for your skills",
+    "pivots.suffix":" → 5 paths forward",
+    "pivots.subtitle":"Closer to your current strengths = lower skill gap. Best fit at the top.",
+    "pivots.gap":"Skill gap","pivots.best":"Best fit",
+    "plan.label":"your 30-day plan","plan.headline":"Pivot in 30 days · 30 minutes a day",
+    "plan.subtitle":"Each week = one concrete agent you build. By Day 30 you have a portfolio, not a course certificate.",
+    "li.label":"your linkedin · copy + paste","li.title":"Your new positioning · ready tonight",
+    "li.headline":"HEADLINE","li.about":"ABOUT","li.copy":"Copy both",
+    "proj.label":"portfolio · 3 projects to build","proj.title":"Build these 3 in your 30 days",
+    "proj.subtitle":"Each is a real, shippable agent. Recruiters see \"AI Marketing Lead\", not \"marketing manager who took a course\".",
+    "proj.cta":"All 3 are taught hands-on at <strong>HuVa Academy</strong>. Next cohort: May 20.",
+    "proj.btn":"Build them with us →",
+    "id.label":"share your pivot","id.title":"Your AI-augmented identity",
+    "id.subtitle":"A card to share on LinkedIn — or send to your manager when you're asking for the new title.",
+    "id.brand":"HuVa · AI-Augmented Identity",
+    "id.exposure":"AI exposure","id.risk":"Pivot risk","id.plan30":"30-day plan",
+    "id.started":"✓ Started","id.portfolio":"Portfolio","id.flight":"3 agents · in flight",
+    "id.linkedin":"Share to LinkedIn","id.pdf":"Download as PDF",
+    "id.share":"Copy share link","id.again":"↻ Try a different role",
+    "foot.this":"This is a wireframe.",
+    "foot.body":"Mock data only. The real version uses your CV + Anthropic API to generate everything you see. This page exists to validate the experience flow before we build it.",
+    "foot.fb.title":"Leave detailed feedback","foot.fb.sub":"Opens a GitHub issue, takes 30 seconds.",
+    "foot.fb.btn":"Leave a comment →",
+    "foot.share.title":"Share this wireframe","foot.share.btn":"Copy link","foot.share.copied":"Copied ✓",
+    "foot.allcomments":"See all comments & issues →",
+    "foot.arch":"Read the architecture doc →"
   },
-  engineer:{
-    title:"Software Engineer",
-    name:"Davit K.",
-    exposure:71,
-    aug:34, auto:58, safe:8,
-    blurb:"You're at the front of the wave. 71% of your tasks already touch AI — that's the highest of any major occupation. The pivot isn't away from code; it's into orchestrating systems of agents.",
-    tasks:[
-      {label:"Write boilerplate code", tag:"auto", text:"Claude/Copilot — done in keystrokes."},
-      {label:"Debug stack traces", tag:"auto", text:"AI reads them faster than you."},
-      {label:"System design / architecture", tag:"aug", text:"You drive — AI explores tradeoffs."},
-      {label:"Code review judgement calls", tag:"safe", text:"Taste and context, still human."},
-    ],
-    newRole:"AI Systems Engineer",
-    risk:"Medium",
-    pivots:[
-      {name:"AI Systems Engineer (build with agents)", gap:"18%", best:true},
-      {name:"Agent infrastructure / DevOps", gap:"25%"},
-      {name:"Solutions architect for AI products", gap:"30%"},
-      {name:"Eval / safety engineer", gap:"38%"},
-      {name:"Independent AI consultant for SMBs", gap:"45%"},
-    ],
-    weeks:[
-      {label:"Week 1", text:"Master Claude API · build a coding-style enforcement skill for your team."},
-      {label:"Week 2", text:"Build a multi-agent code-review pipeline (planner + reviewer + tester)."},
-      {label:"Week 3", text:"Wire it to your repo. Ship a real PR via the agents."},
-      {label:"Week 4", text:"Write up the architecture. Open-source it. Land the new title."},
-    ],
-    headline:"Software Engineer → AI Systems · Multi-agent pipelines · 6 yrs full-stack",
-    about:"I used to write code. Now I write the systems that write the code — and review it, and ship it. I build multi-agent pipelines on Claude that do the work of a team of three. My GitHub has a working multi-agent code reviewer that's been used on 200+ real PRs. If you need someone who can ship AI inside your engineering org without it falling apart in production, that's the job.",
-    projects:[
-      {name:"Coding-style enforcement skill", day:"HuVa · Day 5"},
-      {name:"Multi-agent code-review pipeline", day:"HuVa · Day 9"},
-      {name:"Slack/GitHub bot orchestrator", day:"HuVa · Day 12"},
-    ],
-  },
-  support:{
-    title:"Customer Service Representative",
-    name:"Anna G.",
-    exposure:68,
-    aug:31, auto:55, safe:14,
-    blurb:"Hard truth: your role as it's written today is the most exposed category in Anthropic's 2026 data. Good news: the people running the AI on top of your former role are in massive demand — and you have the domain knowledge nobody else does.",
-    tasks:[
-      {label:"Answer Tier 1 questions", tag:"auto", text:"Bots handle most of these now."},
-      {label:"Triage edge-case tickets", tag:"aug", text:"Bot sorts, you decide."},
-      {label:"De-escalate angry customers", tag:"safe", text:"Empathy is still the moat."},
-      {label:"Spot product bugs from patterns", tag:"safe", text:"Pattern recognition + judgement."},
-    ],
-    newRole:"AI Operations Lead · Support",
-    risk:"Medium-High",
-    pivots:[
-      {name:"AI Operations Lead (Support)", gap:"20%", best:true},
-      {name:"Conversation Designer for support bots", gap:"28%"},
-      {name:"Customer Insights Analyst (AI-augmented)", gap:"32%"},
-      {name:"Quality / Eval Lead for support AI", gap:"36%"},
-      {name:"Customer Success at AI startups", gap:"40%"},
-    ],
-    weeks:[
-      {label:"Week 1", text:"Master Claude Projects · build a ticket-triage agent on your real history."},
-      {label:"Week 2", text:"Build a tone-of-voice reviewer for bot responses."},
-      {label:"Week 3", text:"Build an escalation detector that flags when a human must step in."},
-      {label:"Week 4", text:"Pitch your manager: own the AI-support stack. Or take it to the market."},
-    ],
-    headline:"Support Operations · Building the AI layer on top of customer experience",
-    about:"I've handled 12,000+ customer conversations. I know exactly where bots break, where they should escalate, and what real humans need from them. I now build the AI systems that handle the easy 70% so my team can focus on the cases that actually matter. Hire me to build your support AI — or to fix the one you already have that's making customers angry.",
-    projects:[
-      {name:"Ticket-triage agent on real history", day:"HuVa · Day 6"},
-      {name:"Tone-of-voice reviewer for bot replies", day:"HuVa · Day 8"},
-      {name:"Escalation detector with human-in-loop", day:"HuVa · Day 11"},
-    ],
-  },
+  hy: {
+    "wf.pill":"Մակետ v1",
+    "wf.tagline":"HuVa Pivot · սեղմիր ինտերակցիայի համար",
+    "wf.arch":"Ճարտարապետություն →",
+    "wf.preview":"Դիտել որպես՝",
+    "hero.eyebrow":"Anthropic Economic Index · Փետրվար 2026",
+    "hero.title":"Քեզ կփոխարինի՞ Claude-ը",
+    "hero.subtitle":"Գրիր քո պաշտոնը: Կտեսնես, թե AI-ն արդեն ինչ առաջադրանքներ է անում քո փոխարեն — և քո պիվոտի ուղին: 10 վայրկյան, առանց գրանցման:",
+    "hero.cta":"Տես իմ AI ռիսկը →",
+    "hero.meta":"Կառուցված Claude-ով · հիմնված Anthropic-ի հետազոտության վրա",
+    "diag.exp":"AI-ի ընդգրկվածությունը քո աշխատանքում",
+    "diag.tasks":"քո առաջադրանքները · ինչ է կատարվում",
+    "diag.source":"Աղբյուր՝ Anthropic Economic Index, պաշտոնական խնդիրների վերլուծություն (Փետրվար 2026)։",
+    "diag.cta":"Հիմա ցույց տուր իմ պիվոտը →",
+    "leg.aug":"Աջակցված","leg.auto":"Ավտոմատացված","leg.safe":"Մարդկային",
+    "tag.auto":"ԱՎՏՈՄԱՏ","tag.aug":"ԱՋԱԿՑՎԱԾ","tag.safe":"ՄԱՐԴԿԱՅԻՆ",
+    "cv.step":"քայլ 2","cv.title":"Բեռնիր քո CV-ն — կամ տեղադրիր",
+    "cv.subtitle":"Կհամապատասխանեցնենք քո հմտությունները լավագույն պիվոտին: 30 վայրկյան: Ոչինչ չենք պահում:",
+    "cv.drop":"Բեռնիր CV-ն (PDF) այստեղ","cv.or":"կամ ","cv.paste":"տեղադրիր տեքստը",
+    "cv.placeholder":"Կամ տեղադրիր CV-ի տեքստն այստեղ...",
+    "cv.cta":"Կազմիր իմ պիվոտի պլանը →","cv.skip":"Բաց թողնել · օգտագործել նմուշ",
+    "pivots.label":"5 պիվոտ քո հմտություններով դասակարգված",
+    "pivots.suffix":" → 5 ուղի առաջ",
+    "pivots.subtitle":"Որքան մոտ քո ուժեղ կողմերին, այնքան ցածր է հմտությունների բացը: Լավագույնը՝ վերևում:",
+    "pivots.gap":"Հմտությունների բաց","pivots.best":"Լավագույնը",
+    "plan.label":"քո 30-օրյա պլանը","plan.headline":"Պիվոտ 30 օրում · օրը 30 րոպե",
+    "plan.subtitle":"Շաբաթը = 1 կոնկրետ ագենտ, որը դու կկառուցես: 30-րդ օրը՝ իսկական պորտֆոլիո, ոչ թե դասընթացի վկայական:",
+    "li.label":"քո LinkedIn-ը · պատճենիր + տեղադրիր","li.title":"Քո նոր դիրքավորումը · պատրաստ այսօր",
+    "li.headline":"ՎԵՐՆԱԳԻՐ","li.about":"ՄԱՍԻՆ","li.copy":"Պատճենել երկուսը",
+    "proj.label":"պորտֆոլիո · 3 պրոյեկտ կառուցելու","proj.title":"Կառուցիր այս 3-ը 30 օրում",
+    "proj.subtitle":"Յուրաքանչյուրը իսկական, գործող ագենտ է: Ռեկրուտերը կտեսնի «AI Marketing Lead», ոչ թե «դասընթաց անցած մենեջեր»:",
+    "proj.cta":"Բոլոր 3-ը սովորեցնում ենք <strong>HuVa Academy</strong>-ում: Հաջորդ կոհորտը՝ Մայիսի 20:",
+    "proj.btn":"Կառուցիր մեզ հետ →",
+    "id.label":"կիսվիր քո պիվոտով","id.title":"Քո AI-աջակցված ինքնությունը",
+    "id.subtitle":"Քարտ՝ կիսվելու LinkedIn-ում — կամ ուղարկելու մենեջերիդ, երբ նոր պաշտոն ես խնդրում:",
+    "id.brand":"HuVa · AI-աջակցված ինքնություն",
+    "id.exposure":"AI ընդգրկվածություն","id.risk":"Պիվոտի ռիսկ","id.plan30":"30-օրյա պլան",
+    "id.started":"✓ Սկսված","id.portfolio":"Պորտֆոլիո","id.flight":"3 ագենտ · ընթացքում",
+    "id.linkedin":"Կիսվել LinkedIn-ով","id.pdf":"Ներբեռնել որպես PDF",
+    "id.share":"Պատճենել հղումը","id.again":"↻ Փորձիր այլ պաշտոն",
+    "foot.this":"Սա մակետ է:",
+    "foot.body":"Միայն նմուշ տվյալներ: Իրական տարբերակը կօգտագործի քո CV-ն + Anthropic API՝ այստեղ տեսածդ ամեն ինչ ստեղծելու համար: Այս էջը գոյություն ունի՝ փորձառությունը հաստատելու նախքան կառուցելը:",
+    "foot.fb.title":"Թող մանրամասն հետադարձ կապ","foot.fb.sub":"Բացում է GitHub issue, 30 վայրկյան:",
+    "foot.fb.btn":"Թող մեկնաբանություն →",
+    "foot.share.title":"Կիսվիր մակետով","foot.share.btn":"Պատճենել հղումը","foot.share.copied":"Պատճենվեց ✓",
+    "foot.allcomments":"Տես բոլոր մեկնաբանությունները →",
+    "foot.arch":"Կարդա ճարտարապետության փաստաթուղթը →"
+  }
 };
 
+const ROLES = {
+  marketing:{
+    title:{en:"Marketing Manager", hy:"Մարքեթինգ մենեջեր"},
+    name:{en:"Maria S.", hy:"Մարիա Ս."},
+    exposure:47, aug:38, auto:47, safe:15,
+    blurb:{
+      en:"You're in the augment lane — AI is helping with most of your work, not replacing the role. But the job description for hiring you is changing fast.",
+      hy:"Դու augment գոտում ես — AI-ն օգնում է աշխատանքիդ մեծ մասում, չի փոխարինում պաշտոնը: Բայց քեզ վարձելու job description-ը արագ փոխվում է:"
+    },
+    tasks:[
+      {tag:"auto", label:{en:"Write campaign briefs", hy:"Գրել campaign brief-եր"}, text:{en:"Claude does this in seconds.", hy:"Claude-ը դա անում է վայրկյաններում:"}},
+      {tag:"aug",  label:{en:"Analyze campaign performance", hy:"Վերլուծել campaign-ի արդյունքները"}, text:{en:"Claude drafts the read; you decide.", hy:"Claude-ը պատրաստում է վերլուծությունը, դու որոշում ես:"}},
+      {tag:"safe", label:{en:"Manage stakeholder relationships", hy:"Ղեկավարել շահակիցների հետ հարաբերությունները"}, text:{en:"Still you. Always you.", hy:"Միայն դու: Միշտ դու:"}},
+      {tag:"auto", label:{en:"Optimize landing page copy", hy:"Օպտիմիզացնել landing page-ի տեքստը"}, text:{en:"AI ships variants overnight.", hy:"AI-ն մի գիշերում ստեղծում է բազմաթիվ տարբերակներ:"}},
+    ],
+    newRole:{en:"AI-Augmented Marketing Lead", hy:"AI-Աջակցված Marketing Lead"},
+    risk:{en:"Low", hy:"Ցածր"},
+    pivots:[
+      {gap:"22%", best:true,  name:{en:"AI-Augmented Marketing Lead", hy:"AI-Աջակցված Marketing Lead"}},
+      {gap:"35%", name:{en:"Marketing Ops Engineer (Claude / n8n)", hy:"Marketing Ops ինժեներ (Claude / n8n)"}},
+      {gap:"28%", name:{en:"Brand Strategist for AI startups", hy:"Բրենդ ստրատեգ AI ստարտափների համար"}},
+      {gap:"31%", name:{en:"Content Systems Designer", hy:"Կոնտենտ համակարգերի դիզայներ"}},
+      {gap:"40%", name:{en:"Independent AI Marketing Consultant", hy:"Անկախ AI մարքեթինգ խորհրդատու"}},
+    ],
+    weeks:[
+      {label:{en:"Week 1", hy:"Շաբաթ 1"}, text:{en:"Master Claude Projects + Artifacts. Build a campaign brief analyzer.", hy:"Տիրապետիր Claude Projects + Artifacts: Կառուցիր campaign brief վերլուծիչ:"}},
+      {label:{en:"Week 2", hy:"Շաբաթ 2"}, text:{en:"Build a landing-page optimizer with brand-voice lock.", hy:"Կառուցիր landing-page օպտիմիզատոր brand-voice կողպեքով:"}},
+      {label:{en:"Week 3", hy:"Շաբաթ 3"}, text:{en:"Build a campaign performance reviewer. Wire to your real GA data.", hy:"Կառուցիր campaign performance վերլուծող: Միացրու քո իրական GA տվյալներին:"}},
+      {label:{en:"Week 4", hy:"Շաբաթ 4"}, text:{en:"Package the 3 agents as your portfolio. Apply to 5 target roles.", hy:"Փաթեթավորիր 3 ագենտները որպես պորտֆոլիո: Դիմիր 5 թիրախային պաշտոնի:"}},
+    ],
+    headline:{
+      en:"Marketing Lead · Building AI-augmented brand systems · 8 yrs scaling content ops",
+      hy:"Marketing Lead · AI-աջակցված brand համակարգերի կառուցում · 8 տարի content ops scaling-ի փորձ"
+    },
+    about:{
+      en:"I run marketing the way 2026 actually works — small teams, leverage from agents, brand voice locked in workflow. I've spent 8 years building content engines at scale. Now I'm wiring them up with Claude. My portfolio: a brief analyzer, an LP optimizer, and a performance review agent — all running on real data.",
+      hy:"Մարքեթինգս վարում եմ այնպես, ինչպես 2026-ին պետք է — փոքր թիմեր, ագենտներից leverage, brand voice փակված workflow-ի մեջ: 8 տարի կառուցել եմ content engines մեծ մասշտաբով: Հիմա միացնում եմ Claude-ի հետ: Իմ պորտֆոլիոն՝ brief analyzer, LP optimizer, և performance review ագենտ — բոլորը աշխատում են իրական տվյալներով:"
+    },
+    projects:[
+      {day:"HuVa · Day 4",  name:{en:"Brief analyzer agent", hy:"Brief վերլուծիչ ագենտ"}},
+      {day:"HuVa · Day 7",  name:{en:"LP optimizer with brand-voice lock", hy:"LP օպտիմիզատոր brand-voice կողպեքով"}},
+      {day:"HuVa · Day 10", name:{en:"Telegram brand-voice bot", hy:"Telegram brand-voice բոտ"}},
+    ]
+  },
+
+  engineer:{
+    title:{en:"Software Engineer", hy:"Ծրագրավորող"},
+    name:{en:"Davit K.", hy:"Դավիթ Կ."},
+    exposure:71, aug:34, auto:58, safe:8,
+    blurb:{
+      en:"You're at the front of the wave. 71% of your tasks already touch AI — that's the highest of any major occupation. The pivot isn't away from code; it's into orchestrating systems of agents.",
+      hy:"Դու ալիքի առաջին գծում ես: Քո առաջադրանքների 71%-ն արդեն դիպչում է AI-ին — ամենաբարձրը բոլոր մասնագիտությունների մեջ: Պիվոտը կոդից հեռանալ չէ, այլ ագենտների համակարգերի կազմակերպումը:"
+    },
+    tasks:[
+      {tag:"auto", label:{en:"Write boilerplate code", hy:"Գրել boilerplate կոդ"}, text:{en:"Claude/Copilot — done in keystrokes.", hy:"Claude/Copilot — մի քանի սեղմումով:"}},
+      {tag:"auto", label:{en:"Debug stack traces", hy:"Debug անել stack trace-եր"}, text:{en:"AI reads them faster than you.", hy:"AI-ն կարդում է քեզանից արագ:"}},
+      {tag:"aug",  label:{en:"System design / architecture", hy:"Համակարգի դիզայն / ճարտարապետություն"}, text:{en:"You drive — AI explores tradeoffs.", hy:"Դու ղեկավարում ես — AI-ն ուսումնասիրում tradeoff-ներ:"}},
+      {tag:"safe", label:{en:"Code review judgement calls", hy:"Code review-ի որոշումներ"}, text:{en:"Taste and context, still human.", hy:"Ճաշակ ու համատեքստ — դեռ մարդկային:"}},
+    ],
+    newRole:{en:"AI Systems Engineer", hy:"AI Համակարգերի ինժեներ"},
+    risk:{en:"Medium", hy:"Միջին"},
+    pivots:[
+      {gap:"18%", best:true,  name:{en:"AI Systems Engineer (build with agents)", hy:"AI Systems ինժեներ (կառուցում ագենտներով)"}},
+      {gap:"25%", name:{en:"Agent infrastructure / DevOps", hy:"Ագենտների infrastructure / DevOps"}},
+      {gap:"30%", name:{en:"Solutions architect for AI products", hy:"Solutions architect AI պրոդուկտների համար"}},
+      {gap:"38%", name:{en:"Eval / safety engineer", hy:"Eval / safety ինժեներ"}},
+      {gap:"45%", name:{en:"Independent AI consultant for SMBs", hy:"Անկախ AI խորհրդատու SMB-ների համար"}},
+    ],
+    weeks:[
+      {label:{en:"Week 1", hy:"Շաբաթ 1"}, text:{en:"Master Claude API · build a coding-style enforcement skill for your team.", hy:"Տիրապետիր Claude API-ին · կառուցիր coding-style կիրառման skill քո թիմի համար:"}},
+      {label:{en:"Week 2", hy:"Շաբաթ 2"}, text:{en:"Build a multi-agent code-review pipeline (planner + reviewer + tester).", hy:"Կառուցիր multi-agent code-review pipeline (planner + reviewer + tester):"}},
+      {label:{en:"Week 3", hy:"Շաբաթ 3"}, text:{en:"Wire it to your repo. Ship a real PR via the agents.", hy:"Միացրու քո repo-ին: Ուղարկիր իսկական PR ագենտների միջոցով:"}},
+      {label:{en:"Week 4", hy:"Շաբաթ 4"}, text:{en:"Write up the architecture. Open-source it. Land the new title.", hy:"Գրիր ճարտարապետությունը: Open-source արա: Վերցրու նոր պաշտոնը:"}},
+    ],
+    headline:{
+      en:"Software Engineer → AI Systems · Multi-agent pipelines · 6 yrs full-stack",
+      hy:"Ծրագրավորող → AI Systems · Multi-agent pipeline-ներ · 6 տարի full-stack"
+    },
+    about:{
+      en:"I used to write code. Now I write the systems that write the code — and review it, and ship it. I build multi-agent pipelines on Claude that do the work of a team of three. My GitHub has a working multi-agent code reviewer that's been used on 200+ real PRs.",
+      hy:"Նախկինում կոդ էի գրում: Հիմա գրում եմ համակարգեր, որոնք գրում են կոդը — և ստուգում, և ուղարկում: Claude-ի վրա կառուցում եմ multi-agent pipeline-ներ, որոնք անում են 3 հոգու աշխատանքը: GitHub-իս մեջ կա աշխատող multi-agent code reviewer, որն օգտագործվել է 200+ իսկական PR-ների վրա:"
+    },
+    projects:[
+      {day:"HuVa · Day 5",  name:{en:"Coding-style enforcement skill", hy:"Coding-style կիրառման skill"}},
+      {day:"HuVa · Day 9",  name:{en:"Multi-agent code-review pipeline", hy:"Multi-agent code-review pipeline"}},
+      {day:"HuVa · Day 12", name:{en:"Slack/GitHub bot orchestrator", hy:"Slack/GitHub բոտ orchestrator"}},
+    ]
+  },
+
+  support:{
+    title:{en:"Customer Service Representative", hy:"Հաճախորդների սպասարկման մասնագետ"},
+    name:{en:"Anna G.", hy:"Աննա Գ."},
+    exposure:68, aug:31, auto:55, safe:14,
+    blurb:{
+      en:"Hard truth: your role as written today is the most exposed category in Anthropic's 2026 data. Good news: the people running AI on top of your former role are in massive demand — and you have the domain knowledge nobody else does.",
+      hy:"Կոշտ ճշմարտություն՝ քո պաշտոնն այսօրվա տեսքով ամենից շատ ենթարկված կատեգորիան է Anthropic-ի 2026 տվյալներում: Բարի լուր՝ նրանք, ովքեր AI են ղեկավարում քո նախկին պաշտոնի վրա, շատ պահանջարկ ունեն — իսկ քո ունեցած domain-ի գիտելիքը ուրիշ ոչ մեկն ունի:"
+    },
+    tasks:[
+      {tag:"auto", label:{en:"Answer Tier 1 questions", hy:"Պատասխանել Tier 1 հարցերի"}, text:{en:"Bots handle most of these now.", hy:"Բոտերն այս ամենն արդեն անում են:"}},
+      {tag:"aug",  label:{en:"Triage edge-case tickets", hy:"Տեսակավորել edge-case tickets-ները"}, text:{en:"Bot sorts, you decide.", hy:"Բոտը դասակարգում է, դու որոշում:"}},
+      {tag:"safe", label:{en:"De-escalate angry customers", hy:"Հանգստացնել զայրացած հաճախորդներին"}, text:{en:"Empathy is still the moat.", hy:"Կարեկցանքը դեռ մարդկային մենաշնորհ է:"}},
+      {tag:"safe", label:{en:"Spot product bugs from patterns", hy:"Գտնել product bugs-եր patterns-ից"}, text:{en:"Pattern recognition + judgement.", hy:"Օրինաչափությունների ճանաչում + դատողություն:"}},
+    ],
+    newRole:{en:"AI Operations Lead · Support", hy:"AI Operations Lead · Support"},
+    risk:{en:"Medium-High", hy:"Միջին-Բարձր"},
+    pivots:[
+      {gap:"20%", best:true,  name:{en:"AI Operations Lead (Support)", hy:"AI Operations Lead (Support)"}},
+      {gap:"28%", name:{en:"Conversation Designer for support bots", hy:"Conversation Designer support բոտերի համար"}},
+      {gap:"32%", name:{en:"Customer Insights Analyst (AI-augmented)", hy:"Customer Insights վերլուծաբան (AI-աջակցված)"}},
+      {gap:"36%", name:{en:"Quality / Eval Lead for support AI", hy:"Quality / Eval Lead support AI-ի համար"}},
+      {gap:"40%", name:{en:"Customer Success at AI startups", hy:"Customer Success AI ստարտափներում"}},
+    ],
+    weeks:[
+      {label:{en:"Week 1", hy:"Շաբաթ 1"}, text:{en:"Master Claude Projects · build a ticket-triage agent on your real history.", hy:"Տիրապետիր Claude Projects · կառուցիր ticket-triage ագենտ քո իրական պատմության վրա:"}},
+      {label:{en:"Week 2", hy:"Շաբաթ 2"}, text:{en:"Build a tone-of-voice reviewer for bot responses.", hy:"Կառուցիր tone-of-voice վերլուծիչ բոտի պատասխանների համար:"}},
+      {label:{en:"Week 3", hy:"Շաբաթ 3"}, text:{en:"Build an escalation detector that flags when a human must step in.", hy:"Կառուցիր escalation detector, որը նշում է, երբ մարդը պետք է միջամտի:"}},
+      {label:{en:"Week 4", hy:"Շաբաթ 4"}, text:{en:"Pitch your manager: own the AI-support stack. Or take it to the market.", hy:"Ներկայացրու մենեջերիդ՝ ստանձնիր AI-support stack-ը: Կամ գնա շուկա:"}},
+    ],
+    headline:{
+      en:"Support Operations · Building the AI layer on top of customer experience",
+      hy:"Support Operations · AI շերտի կառուցում հաճախորդի փորձի վրա"
+    },
+    about:{
+      en:"I've handled 12,000+ customer conversations. I know exactly where bots break, where they should escalate, and what real humans need from them. I now build the AI systems that handle the easy 70% so my team can focus on the cases that actually matter.",
+      hy:"Ես վարել եմ 12,000+ հաճախորդի խոսակցություն: Հստակ գիտեմ, որտեղ բոտերը կոտրվում են, որտեղ պետք է escalate անեն, և ինչ իսկական մարդիկ նրանցից ակնկալում են: Հիմա կառուցում եմ AI համակարգեր, որոնք վերցնում են հեշտ 70%-ը՝ որպեսզի թիմս կենտրոնանա կարևորների վրա:"
+    },
+    projects:[
+      {day:"HuVa · Day 6",  name:{en:"Ticket-triage agent on real history", hy:"Ticket-triage ագենտ իրական պատմության վրա"}},
+      {day:"HuVa · Day 8",  name:{en:"Tone-of-voice reviewer for bot replies", hy:"Tone-of-voice վերլուծիչ բոտի պատասխանների"}},
+      {day:"HuVa · Day 11", name:{en:"Escalation detector with human-in-loop", hy:"Escalation detector human-in-loop-ով"}},
+    ]
+  }
+};
+
+let LANG = (localStorage.getItem("huva-lang")||"en");
 let CURRENT = "marketing";
-let DIAG_STARTED = false;
 
-document.getElementById("role-picker").addEventListener("change", e=>{
-  CURRENT = e.target.value;
-  document.getElementById("role-input").value = ROLES[CURRENT].title;
-  reset();
-});
-document.getElementById("role-input").value = ROLES[CURRENT].title;
+function t(k){ return T[LANG][k] ?? k; }
+function f(field){ return field?.[LANG] ?? field?.en ?? ""; }
 
-/* placeholder typing animation */
-const placeholders = ["Marketing Manager","Software Engineer","Customer Service Rep","Data Analyst","Project Manager","Sales Rep"];
+function applyI18n(){
+  document.documentElement.lang = (LANG==="hy"?"hy":"en");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.dataset.i18n;
+    const v = T[LANG][k];
+    if (v == null) return;
+    if (v.includes("<")) el.innerHTML = v; else el.textContent = v;
+  });
+  document.querySelectorAll(".lang").forEach(b=>b.classList.toggle("active", b.dataset.lang===LANG));
+  document.getElementById("cv-text").placeholder = t("cv.placeholder");
+  const inp = document.getElementById("role-input");
+  if (!inp.value) inp.placeholder = ROLES[CURRENT].title[LANG];
+  // re-render dynamic content if visible
+  if (!document.getElementById("stage-diagnostic").classList.contains("is-hidden")) {
+    renderTasks(ROLES[CURRENT]); renderLegend(ROLES[CURRENT]);
+    document.getElementById("exposure-blurb").textContent = ROLES[CURRENT].blurb[LANG];
+  }
+  if (!document.getElementById("stage-plan").classList.contains("is-hidden")) renderPlan();
+}
+
+function setLang(l){
+  LANG = l;
+  localStorage.setItem("huva-lang", l);
+  applyI18n();
+}
+
+const placeholdersByLang = {
+  en:["Marketing Manager","Software Engineer","Customer Service Rep","Data Analyst","Project Manager","Sales Rep"],
+  hy:["Մարքեթինգ մենեջեր","Ծրագրավորող","Հաճախորդների սպասարկում","Տվյալների վերլուծաբան","Project Manager","Վաճառքի մասնագետ"]
+};
 let phIdx=0;
 setInterval(()=>{
   const el = document.getElementById("role-input");
   if (el===document.activeElement || el.value) return;
-  phIdx = (phIdx+1) % placeholders.length;
-  el.placeholder = placeholders[phIdx];
+  const arr = placeholdersByLang[LANG];
+  phIdx = (phIdx+1) % arr.length;
+  el.placeholder = arr[phIdx];
 }, 1700);
+
+document.getElementById("role-picker").addEventListener("change", e=>{
+  CURRENT = e.target.value;
+  document.getElementById("role-input").value = ROLES[CURRENT].title[LANG];
+  reset();
+});
 
 function show(id){ document.getElementById(id).classList.remove("is-hidden"); }
 function hide(id){ document.getElementById(id).classList.add("is-hidden"); }
 
 function goDiagnostic(){
   const v = document.getElementById("role-input").value.trim().toLowerCase();
-  if (v.includes("eng") || v.includes("dev") || v.includes("program")) CURRENT="engineer";
-  else if (v.includes("support") || v.includes("service") || v.includes("custom")) CURRENT="support";
+  if (v.includes("eng") || v.includes("dev") || v.includes("program") || v.includes("ծրագ")) CURRENT="engineer";
+  else if (v.includes("support") || v.includes("service") || v.includes("custom") || v.includes("սպաս") || v.includes("հաճախ")) CURRENT="support";
   else CURRENT="marketing";
   document.getElementById("role-picker").value = CURRENT;
   hide("stage-input");
   show("stage-diagnostic");
   animateDiagnostic();
 }
-
 function animateDiagnostic(){
   const r = ROLES[CURRENT];
   const num = document.getElementById("exposure-num");
-  document.getElementById("exposure-blurb").textContent = r.blurb;
+  document.getElementById("exposure-blurb").textContent = r.blurb[LANG];
   let n=0;
   const step = ()=>{
     n += Math.max(1, Math.round(r.exposure/30));
-    if (n>=r.exposure){ n=r.exposure; num.textContent=n; renderBars(r); renderTasks(r); return; }
+    if (n>=r.exposure){ n=r.exposure; num.textContent=n; renderBars(r); renderTasks(r); renderLegend(r); return; }
     num.textContent=n;
     requestAnimationFrame(step);
   };
@@ -503,20 +623,21 @@ function renderBars(r){
   document.getElementById("bar-aug").style.width = r.aug+"%";
   document.getElementById("bar-auto").style.width = r.auto+"%";
   document.getElementById("bar-safe").style.width = r.safe+"%";
-  document.getElementById("leg-aug").textContent  = "Augmented "+r.aug+"%";
-  document.getElementById("leg-auto").textContent = "Automated "+r.auto+"%";
-  document.getElementById("leg-safe").textContent = "Untouched "+r.safe+"%";
+}
+function renderLegend(r){
+  document.getElementById("leg-aug").textContent  = t("leg.aug")+" "+r.aug+"%";
+  document.getElementById("leg-auto").textContent = t("leg.auto")+" "+r.auto+"%";
+  document.getElementById("leg-safe").textContent = t("leg.safe")+" "+r.safe+"%";
 }
 function renderTasks(r){
   const wrap = document.getElementById("task-list");
   wrap.innerHTML = "";
-  r.tasks.forEach(t=>{
-    const tagClass = {auto:"tag-auto", aug:"tag-aug", safe:"tag-safe"}[t.tag];
-    const tagLabel = {auto:"AUTOMATED", aug:"AUGMENTED", safe:"UNTOUCHED"}[t.tag];
-    wrap.innerHTML += `<div class="task-row"><div style="flex:1"><strong style="display:block;font-size:14px">${t.label}</strong><span style="font-size:13px;color:var(--muted)">${t.text}</span></div><span class="task-tag ${tagClass}">${tagLabel}</span></div>`;
+  r.tasks.forEach(tk=>{
+    const tagClass = {auto:"tag-auto", aug:"tag-aug", safe:"tag-safe"}[tk.tag];
+    const tagLabel = t({auto:"tag.auto", aug:"tag.aug", safe:"tag.safe"}[tk.tag]);
+    wrap.innerHTML += `<div class="task-row"><div style="flex:1"><strong style="display:block;font-size:14px">${f(tk.label)}</strong><span style="font-size:13px;color:var(--muted)">${f(tk.text)}</span></div><span class="task-tag ${tagClass}">${tagLabel}</span></div>`;
   });
 }
-
 function goCV(){ hide("stage-diagnostic"); show("stage-cv"); window.scrollTo({top:0, behavior:"smooth"}); }
 function goPlan(){
   hide("stage-cv");
@@ -526,24 +647,23 @@ function goPlan(){
 }
 function renderPlan(){
   const r = ROLES[CURRENT];
-  document.getElementById("pivot-headline").textContent = `${r.title} → 5 paths forward`;
+  document.getElementById("pivot-headline").textContent = r.title[LANG] + t("pivots.suffix");
   document.getElementById("pivots").innerHTML = r.pivots.map((p,i)=>
-    `<div class="pivot ${p.best?'best':''}"><span class="rank">${i+1}</span><span class="name">${p.name}</span><span class="gap">Skill gap: ${p.gap}</span>${p.best?'<span class="badge">Best fit</span>':''}</div>`
+    `<div class="pivot ${p.best?'best':''}"><span class="rank">${i+1}</span><span class="name">${f(p.name)}</span><span class="gap">${t("pivots.gap")}: ${p.gap}</span>${p.best?`<span class="badge">${t("pivots.best")}</span>`:''}</div>`
   ).join("");
   document.getElementById("weeks").innerHTML = r.weeks.map(w=>
-    `<div class="week"><div class="wlabel">${w.label}</div><div class="wbody">${w.text}</div></div>`
+    `<div class="week"><div class="wlabel">${f(w.label)}</div><div class="wbody">${f(w.text)}</div></div>`
   ).join("");
-  document.getElementById("li-headline").textContent = r.headline;
-  document.getElementById("li-about").textContent = r.about;
+  document.getElementById("li-headline").textContent = r.headline[LANG];
+  document.getElementById("li-about").textContent = r.about[LANG];
   document.getElementById("projects").innerHTML = r.projects.map(p=>
-    `<div class="proj-row"><span><strong>${p.name}</strong></span><span class="day">${p.day}</span></div>`
+    `<div class="proj-row"><span><strong>${f(p.name)}</strong></span><span class="day">${p.day}</span></div>`
   ).join("");
-  document.getElementById("id-name").textContent = r.name;
-  document.getElementById("id-role").textContent = r.newRole;
+  document.getElementById("id-name").textContent = r.name[LANG];
+  document.getElementById("id-role").textContent = r.newRole[LANG];
   document.getElementById("id-exp").textContent = r.exposure+"%";
-  document.getElementById("id-risk").textContent = r.risk;
+  document.getElementById("id-risk").textContent = r.risk[LANG];
 }
-
 function reset(){
   hide("stage-diagnostic"); hide("stage-cv"); hide("stage-plan");
   show("stage-input");
@@ -553,6 +673,17 @@ function reset(){
   document.getElementById("bar-safe").style.width = "0%";
   window.scrollTo({top:0, behavior:"smooth"});
 }
+function copyShare(){
+  const url = "https://nickbrutyan-folder.github.io/huva-pivot-wireframe/";
+  navigator.clipboard.writeText(url).then(()=>{
+    const b = document.getElementById("copy-btn");
+    const orig = b.textContent;
+    b.textContent = t("foot.share.copied");
+    setTimeout(()=>b.textContent = orig, 1500);
+  });
+}
+
+applyI18n();
 </script>
 </body>
 </html>
